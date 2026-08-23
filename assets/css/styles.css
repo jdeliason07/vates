@@ -1,11 +1,18 @@
 /* ============================================================
    vates — storefront styles
-   The "Mindform" design: a statement opening (the seer's-eye iris,
-   drawn on a canvas by app.js) over the brand's warm dark ground,
-   then the manifesto, the bottle, the creators, and the specs.
-   Components reference this sheet's own tokens; loom-colors.css is
-   kept verbatim for the brand record. The wordmark is artwork —
-   assets/brand/vates-wordmark.svg — and is never re-set in type.
+
+   The "Storefront" design: a black shop page in the modern
+   direct-to-consumer idiom — a rotating announcement bar, a sticky
+   masthead with a cart pill, a rail of round category thumbs, a
+   full-bleed hero, serif collection tabs over a grid of product
+   tiles, a carousel, a signup band, a four-column footer, and the
+   wordmark set enormous and cropped at the bottom of the page.
+
+   Everything is drawn in black, white and the wordmark's own six
+   bands: the colour on this site comes from the mark, never from a
+   second palette. loom-colors.css is kept verbatim for the brand
+   record. The wordmark is artwork — assets/brand/vates-wordmark.svg
+   — and is never re-set in type.
    ============================================================ */
 
 /* ── Faces, served from here ─────────────────────────────────
@@ -13,8 +20,10 @@
    a render-blocking request to a third party: measured here, a page
    whose font request hung took 12,875ms to DOMContentLoaded against
    95ms when it did not. Inter carries the product and UI voice;
-   Fraunces (one latin variable file) is the manifesto voice — the
-   statement lines only. -------------------------------------- */
+   Fraunces (one latin variable file) is the display voice — the
+   collection tabs and the statement lines. The small caps labels
+   ("4 Products", "Support", "Gold") are set in the system monospace,
+   which costs nothing to serve. ------------------------------- */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -52,38 +61,48 @@
 }
 
 :root {
-  --font: "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  --font: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
 
-  /* The warm world: umber ground, paper ink, one band as accent. */
-  --ground:      #2e251b;
-  --ground-deep: #1e180f;
-  --panel:       #3a2f21;
-  --ink:         #f4eee3;
-  --ink-2:       #cfc3ad;
-  --ink-3:       #a2937a;
-  --line:        #4e4230;
-  --accent:      #e3873d;   /* one band from the wordmark's own ramp */
-  --accent-ink:  #211a11;
+  /* Black shop, white ink. Everything between is a step of grey; the
+     only colour is the wordmark's. */
+  --ground:      #000;
+  --ground-2:    #0b0b0b;   /* the bands that lift off pure black    */
+  --panel:       #141414;   /* product tiles, inputs, the drawer     */
+  --panel-2:     #1d1d1d;   /* hover, pressed, the tile's own inset  */
+  --ink:         #fff;
+  --ink-2:       #b5b5b5;   /* secondary copy                        */
+  --ink-3:       #7a7a7a;   /* mono labels, captions, disabled       */
+  --line:        #262626;
+  --cream:       #ece7dc;   /* the "Back in stock" chip              */
+  --lilac:       #dcd8ff;   /* the "New" chip                        */
+
+  /* The six bands of the wordmark, as a ramp and as single stops. */
+  --band-1: #76b856;
+  --band-2: #f2ba4b;
+  --band-3: #e3873d;
+  --band-4: #cf4743;
+  --band-5: #8b4192;
+  --band-6: #4698d3;
   --bands: linear-gradient(to right,
-    #76b856 0 16.667%, #f2ba4b 16.667% 33.333%, #e3873d 33.333% 50%,
-    #cf4743 50% 66.667%, #8b4192 66.667% 83.333%, #4698d3 83.333% 100%);
+    var(--band-1) 0 16.667%, var(--band-2) 16.667% 33.333%,
+    var(--band-3) 33.333% 50%, var(--band-4) 50% 66.667%,
+    var(--band-5) 66.667% 83.333%, var(--band-6) 83.333% 100%);
 
-  /* The vertical rhythm every band shares. Sections used to carry a top
-     padding and no bottom, which read fine while they ran together; with
-     the band filaments dividing them, an asymmetric section puts the line
-     hard against the content above it. Equal on both sides, so a divider
-     always lands centred between two sections. */
-  --section-y: clamp(4.5rem, 10vw, 8rem);
+  --section-y: clamp(3.5rem, 9vw, 6.5rem);
 
-  --radius-sm: 10px;   /* controls: buttons, inputs, steppers */
-  --radius-md: 14px;   /* small panels: thumbs, notices */
-  --radius-lg: 22px;   /* cards and surfaces */
+  --radius-sm: 8px;    /* controls: buttons, inputs, steppers */
+  --radius-md: 12px;   /* tiles, cards, notices               */
+  --radius-pill: 999px;
+
+  --masthead-h: 4.25rem;
 }
 
 /* The page ground. loom-colors.css is kept verbatim, so this site's own
    ground is set here rather than by editing the brand file. */
-[data-theme="dark"] { --color-bg: #2e251b; }
+[data-theme="dark"] { --color-bg: #000; }
 
 /* ── Reset / base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
@@ -92,6 +111,8 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   background: var(--ground);
+  /* the sticky masthead must not sit on top of an anchored section */
+  scroll-padding-top: calc(var(--masthead-h) + 1rem);
 }
 
 body {
@@ -103,974 +124,959 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 body.is-locked { overflow: hidden; }
 
 img, svg, video, canvas { display: block; max-width: 100%; }
 button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
 
 /* component display rules must not out-specify the hidden attribute */
 [hidden] { display: none !important; }
 
-h1, h2, h3, p, dl, dd, dt, figure { margin: 0; }
-ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p, dl, dd, dt, figure, blockquote { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
 
-a { color: var(--ink-2); }
+a { color: inherit; }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
+}
+
+.vh {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
-  z-index: 200;
+  z-index: 300;
   padding: 0.75rem 1rem;
-  background: var(--panel);
-  color: var(--ink);
+  background: var(--ink);
+  color: #000;
   border-radius: var(--radius-sm);
   text-decoration: none;
 }
 .skip-link:focus { left: 1rem; top: 1rem; }
 
 /* ── Shared primitives ──────────────────────────────────────── */
-.container { width: min(1160px, 100% - clamp(2.5rem, 7vw, 7rem)); margin-inline: auto; }
 
+.container {
+  width: min(100% - 2.5rem, 1280px);
+  margin-inline: auto;
+}
+
+/* The mono label: the shop's small voice — section heads, product
+   tiers, counts, footer column titles. */
 .label {
-  font-family: var(--font);
-  font-weight: 500;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
   color: var(--ink-3);
-  margin: 0;
+  text-transform: none;
 }
 
 /* The six bands, demoted to a hairline signature. */
-.filament { height: 2px; background: var(--bands); border: 0; margin: 0; }
+.filament {
+  height: 2px;
+  border: 0;
+  margin: 0;
+  background: var(--bands);
+  opacity: 0.9;
+}
 
-/* ── Wordmark ───────────────────────────────────────────────── */
-.wordmark { line-height: 1; }
-.wordmark img { display: block; width: 100%; height: auto; }
-.wordmark--footer { width: clamp(150px, 24vw, 250px); }
+.hairline { height: 1px; border: 0; margin: 0; background: var(--line); }
 
 /* ── Buttons ────────────────────────────────────────────────── */
-.btn {
-  appearance: none;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  padding: 0.9rem 2.1rem;
-  font-family: var(--font);
-  font-size: 0.98rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  transition: background-color 160ms ease, transform 160ms ease, opacity 160ms ease;
-}
 
-/* One band from the wordmark's own ramp, solid: ink at 5.4:1, with
-   room to spare before the type size or padding moves. */
-.btn--primary { background: var(--accent); color: var(--accent-ink); }
-.btn--primary:hover { transform: translateY(-1px); background: #ea9349; }
-.btn--primary:active { transform: none; }
-.btn--primary:disabled {
-  background: var(--panel);
-  color: var(--ink-3);
-  cursor: not-allowed;
-  transform: none;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.18s ease,
+              color 0.18s ease, opacity 0.18s ease;
 }
+.btn:active { transform: translateY(1px); }
 .btn--block { width: 100%; }
 
-/* ── The ticker: the chant, edge to edge ────────────────────── */
-.ticker {
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 6;
-  overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--ground-deep) 88%, transparent);
-  padding-block: 0.55rem;
-}
-.ticker__track {
-  display: flex;
-  align-items: center;
-  gap: 1.4rem;
-  width: max-content;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  white-space: nowrap;
-}
-.ticker .sq { width: 0.42rem; height: 0.42rem; flex: none; }
-.ticker .sq-1 { background: #76b856; } .ticker .sq-2 { background: #f2ba4b; }
-.ticker .sq-3 { background: #e3873d; } .ticker .sq-4 { background: #cf4743; }
-.ticker .sq-5 { background: #8b4192; } .ticker .sq-6 { background: #4698d3; }
-@media (prefers-reduced-motion: no-preference) {
-  .ticker__track { animation: ticker 30s linear infinite; }
-  @keyframes ticker { to { transform: translateX(-50%); } }
-}
+/* White on black is the shop's primary control — the cart pill, the
+   add button and Checkout are all the same object at three sizes. */
+.btn--primary { background: var(--ink); color: #000; }
+.btn--primary:hover { background: #e6e6e6; }
+.btn--primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* ── The opening ────────────────────────────────────────────── */
-.hero {
+.btn--ghost { background: transparent; color: var(--ink); border-color: #4a4a4a; }
+.btn--ghost:hover { border-color: var(--ink); }
+
+/* ── The announcement bar ───────────────────────────────────
+   One line at a time, changing on its own and on the arrows. The
+   messages are stacked and cross-faded so the bar never changes
+   height between a short line and a long one. --------------- */
+
+.announce {
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
-  background: radial-gradient(120% 100% at 50% 0%, #29211408 0%, transparent 60%), var(--ground-deep);
-  overflow: hidden;
+  background: var(--ground);
+  border-bottom: 1px solid var(--line);
+  padding: 0.7rem 2.75rem;
+  text-align: center;
 }
 
-.hero__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.announce__viewport {
+  position: relative;
+  min-height: 1.5rem;
+}
 
-.hero__scrim {
+.announce__item {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: linear-gradient(to bottom,
-    transparent 0%, transparent 46%,
-    rgba(30, 24, 15, 0.55) 72%, rgba(30, 24, 15, 0.95) 100%);
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
 }
+.announce__item.is-current { opacity: 1; visibility: visible; }
+.announce__item a,
+.announce__item span { text-decoration: underline; text-underline-offset: 3px; }
 
-/* The mark at masthead scale, centred over the eye. */
-.top {
+.announce__nav {
   position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 5;
+  top: 50%;
+  translate: 0 -50%;
+  width: 2.25rem;
+  height: 2.25rem;
   display: grid;
-  justify-items: center;
-  padding-top: clamp(4.5rem, 14vh, 9rem);
+  place-items: center;
+  color: var(--ink);
 }
-.top__mark img {
-  width: clamp(300px, 56vw, 820px);
-  height: auto;
-  filter: drop-shadow(0 4px 40px rgba(15, 11, 5, 0.55));
+.announce__nav--prev { left: 0.25rem; }
+.announce__nav--next { right: 0.25rem; }
+
+/* ── The masthead ───────────────────────────────────────────── */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--ground);
+  border-bottom: 1px solid var(--line);
 }
 
-/* Tagline and promise on screen one — no empty screen between the
-   opening and the bottle. */
+.masthead__inner {
+  height: var(--masthead-h);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.masthead__menu {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: -0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.masthead__menu span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+}
+
+.masthead__mark {
+  margin: 0 auto 0 0.25rem;
+  line-height: 0;
+}
+.masthead__mark img { height: 1.9rem; width: auto; }
+
+.masthead__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.icon-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+}
+
+.cart-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 2.75rem;
+  padding: 0 1.15rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+.cart-pill__count { font-variant-numeric: tabular-nums; }
+
+/* ── The menu panel ─────────────────────────────────────────
+   The hamburger's drawer: it slides from the left, over the same
+   backdrop the cart uses. ---------------------------------- */
+
+.menu {
+  position: fixed;
+  z-index: 120;
+  inset: 0 auto 0 0;
+  width: min(22rem, 88vw);
+  background: var(--ground);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.menu.is-open { transform: none; }
+
+.menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--masthead-h);
+  padding: 0 1rem 0 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+.menu__head img { height: 1.6rem; width: auto; }
+
+.menu__body { padding: 1.5rem 1.25rem 2rem; overflow-y: auto; }
+.menu__list + .menu__label { margin-top: 2rem; }
+.menu__label { display: block; margin-bottom: 0.75rem; }
+
+.menu__list a {
+  display: block;
+  padding: 0.6rem 0;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.menu__list--plain a {
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--ink-2);
+  padding: 0.4rem 0;
+}
+
+/* ── The category rail ──────────────────────────────────────
+   Round thumbs that scroll sideways under the masthead. ---- */
+
+.rail {
+  border-bottom: 1px solid var(--line);
+  background: var(--ground);
+}
+
+.rail__track {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.7rem 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.rail__track::-webkit-scrollbar { display: none; }
+
+.rail__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.rail__thumb {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--panel);
+  display: grid;
+  place-items: center;
+}
+.rail__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.rail__thumb--mark img { width: 68%; height: auto; object-fit: contain; }
+.rail__thumb--tall { background: #1f1f1f; }
+.rail__thumb--tall img { height: 88%; width: auto; object-fit: contain; }
+
+/* ── The hero ───────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  background: var(--ground-2);
+}
+
+.hero__media {
+  position: relative;
+  height: clamp(19rem, 58vh, 34rem);
+  overflow: hidden;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 45%;
+}
+
+/* The photograph is bright on the right and busy on the left; the
+   scrim is what lets type sit on it at all. */
+.hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.15) 42%, rgba(0, 0, 0, 0.9) 100%);
+}
+
 .hero__copy {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  z-index: 2;
-  display: grid;
-  justify-items: center;
+  z-index: 1;
+  left: 0; right: 0; bottom: clamp(1.25rem, 4vw, 2.5rem);
   text-align: center;
-  row-gap: clamp(0.7rem, 1.6vh, 1.1rem);
-  padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(5rem, 10vh, 7rem);
-  pointer-events: none;
 }
+
 .hero__tag {
   font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(2.2rem, 6.2vw, 4.8rem);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 7vw, 3.25rem);
   line-height: 1.05;
   letter-spacing: -0.015em;
   text-wrap: balance;
-  max-width: 15ch;
-  text-shadow: 0 2px 34px rgba(20, 15, 8, 0.65), 0 1px 6px rgba(20, 15, 8, 0.4);
 }
-.hero__intro {
-  max-width: 44ch;
-  font-size: clamp(1rem, 1.7vw, 1.25rem);
-  line-height: 1.5;
+
+.hero__sub {
+  margin-top: 0.6rem;
   color: var(--ink-2);
-  text-wrap: pretty;
-  text-shadow: 0 1px 18px rgba(20, 15, 8, 0.6);
+  font-size: 1rem;
 }
 
-.hero__cue {
-  position: absolute;
-  bottom: 1.1rem;
-  left: 50%;
-  translate: -50% 0;
-  display: grid;
-  justify-items: center;
-  padding: 0.5rem 1rem;
-  color: var(--ink-3);
-  text-decoration: none;
-}
-.hero__cue-line {
-  width: 1px;
-  height: 2.1rem;
-  background: linear-gradient(to bottom, transparent, var(--ink-3));
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero__cue-line { animation: cue 2.4s ease-in-out infinite; }
-  @keyframes cue {
-    0%, 100% { transform: scaleY(0.6); transform-origin: top; opacity: 0.6; }
-    50% { transform: scaleY(1); opacity: 1; }
-  }
-}
+/* ── The shop: tabs, count, tiles ──────────────────────────── */
 
-/* Load-in: one orchestrated moment, not scattered effects. */
-@media (prefers-reduced-motion: no-preference) {
-  .rise { opacity: 0; transform: translateY(18px); animation: rise 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-  .rise-2 { animation-delay: 120ms; }
-  .rise-3 { animation-delay: 240ms; }
-  @keyframes rise { to { opacity: 1; transform: none; } }
-}
+.shop { padding: clamp(2rem, 6vw, 3.5rem) 0 var(--section-y); }
 
-/* ── Who we are ─────────────────────────────────────────────── */
-.about { padding-block: var(--section-y); }
-.about__inner { display: grid; justify-items: center; text-align: center; }
-.about__title {
-  margin-top: 1rem;
-  font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(1.9rem, 3.8vw, 3.2rem);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-  max-width: 20ch;
-}
-.about__body {
-  margin-top: 1.2rem;
-  max-width: 56ch;
-  font-size: 1.02rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-  text-wrap: pretty;
-}
-.about__body + .about__body { margin-top: 0.8rem; }
-
-/* The three "if you…" lines are the address to the reader and the heart
-   of the letter, so they carry more weight than body copy: a size up,
-   the leading opened, and balanced wrapping so a line that runs over
-   breaks evenly instead of leaving one word stranded. */
-.about__body--creed {
-  margin-top: clamp(1.8rem, 4vw, 2.6rem);
-  /* Wide enough that the longest of the three sits on one line at any
-     desktop width — cut shorter, the second line stranded "yet." on a
-     line of its own, which broke the rhythm the anaphora depends on. */
-  max-width: 62ch;
-  font-size: clamp(1.05rem, 1.9vw, 1.22rem);
-  line-height: 1.9;
-  color: var(--ink);
-  text-wrap: balance;
-}
-
-/* The answer to those three lines, so it lifts into the serif. */
-.about__body--close {
-  margin-top: clamp(1.6rem, 3.5vw, 2.2rem);
-  font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-  line-height: 1.4;
-  color: var(--ink);
-  text-wrap: balance;
-}
-
-/* The sign-off. A letter ends with a name, so this sits apart from the
-   message above it and quieter than everything else in the section. */
-.about__signature {
-  margin: clamp(2rem, 4.5vw, 3rem) auto 0;
-  padding-top: clamp(1.2rem, 2.6vw, 1.7rem);
-  border-top: 1px solid var(--line);
-  width: min(52ch, 100%);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--ink-3);
-  text-wrap: balance;
-}
-
-/* ── The bridge: vision to vessel ───────────────────────────
-   A held breath between the manifesto and the object. Full rhythm
-   above, half below: "Meet No. 01" is an introduction, so it leans
-   into the bottle rather than standing a whole band away from it.
-   This is the one seam on the page with no divider under it,
-   because the two halves are one movement. */
-.bridge { padding-block: var(--section-y) calc(var(--section-y) * 0.5); }
-.bridge__inner { display: grid; justify-items: center; text-align: center; }
-
-/* Opens the section, and pairs with "Meet No. 01" closing it — the two
-   accent lines bracket the three in between. */
-.bridge__eyebrow {
-  margin-bottom: clamp(0.9rem, 2vw, 1.3rem);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.bridge__title {
-  font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
-  line-height: 1.1;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-  max-width: 18ch;
-}
-.bridge__line {
-  margin-top: 0.9rem;
-  font-size: clamp(1.02rem, 1.8vw, 1.25rem);
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-.bridge__line:first-of-type { margin-top: clamp(1.6rem, 3.5vh, 2.4rem); }
-
-/* A hairline between each of the three, so they read as three separate
-   thoughts rather than one wrapped paragraph. On the line rather than
-   between elements, so there is nothing to keep in step if one moves. */
-.bridge__line + .bridge__line::before {
-  content: "";
-  display: block;
-  width: 1.75rem;
-  height: 1px;
-  margin: 0 auto 0.9rem;
-  background: color-mix(in srgb, var(--accent) 45%, transparent);
-}
-.bridge__meet {
-  margin-top: clamp(2rem, 4.5vh, 3rem);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/* ── The Vates Standard ─────────────────────────────────────
-   Numbered because it is a creed with an order to it, not a feature
-   list: each line is a rule that earns its position. */
-.standard { padding-block: var(--section-y); }
-.standard__inner { display: grid; justify-items: center; text-align: center; }
-.standard__list {
-  /* The reset above only clears <ul>; this is an <ol> and brings its own
-     markers, which would sit beside the counter below. */
-  margin: clamp(1.8rem, 4vw, 2.8rem) 0 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: standard;
-  display: grid;
-  gap: clamp(1.4rem, 3vw, 2rem);
-  max-width: 30ch;
-}
-.standard__list li {
-  counter-increment: standard;
-  font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(1.2rem, 2.4vw, 1.65rem);
-  line-height: 1.35;
-  color: var(--ink);
-  text-wrap: balance;
-}
-.standard__list li::before {
-  content: counter(standard, decimal-leading-zero);
-  display: block;
-  margin-bottom: 0.3rem;
-  font-family: var(--font);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-}
-.standard__close {
-  margin-top: clamp(2.2rem, 5vw, 3.2rem);
-  padding-top: clamp(1.4rem, 3vw, 2rem);
-  border-top: 1px solid var(--line);
-  width: min(30ch, 100%);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.about__media {
-  margin-top: clamp(2rem, 4.5vw, 3.2rem);
+.tabs {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(1.2rem, 3vw, 2.2rem);
+  gap: clamp(1.5rem, 5vw, 3rem);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 0.9rem;
 }
-.about__panel { width: min(380px, 100%); }
-.about__frame {
+.tabs::-webkit-scrollbar { display: none; }
+
+.tabs__btn {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 8vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #5f5f5f;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.tabs__btn[aria-selected="true"] { color: var(--ink); }
+
+/* The rule under the tabs, with the thumb sitting under whichever tab
+   is showing — app.js sets --i (the index) and --n (how many). */
+.tabs__track {
   position: relative;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  height: 3px;
+  border-radius: 3px;
+  background: #2b2b2b;
   overflow: hidden;
-  background: #000;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
-.about__frame video { display: block; width: 100%; height: auto; }
+.tabs__thumb {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(100% / var(--n, 3));
+  background: var(--ink);
+  border-radius: 3px;
+  transform: translateX(calc(100% * var(--i, 0)));
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.shop__count { margin: clamp(1.75rem, 5vw, 2.75rem) 0 1rem; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.25rem 1rem;
+}
+
+.card { display: flex; flex-direction: column; }
+
+.card__tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  overflow: hidden;
+}
+
+/* Taken out of flow on purpose. The tile's height comes from its
+   aspect-ratio, which is indefinite to a grid child — a percentage
+   height on one is ignored, so the 345×1222 bottle laid itself out at
+   its natural height and was cropped to a band of empty glass. Against
+   an absolutely positioned child the same height is definite, so the
+   whole bottle fits inside the padding. */
+.card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  object-fit: contain;
+}
+
+/* The bottle photograph is a cut-out, and the glass is smoke grey: on a
+   flat near-black tile it all but disappears. The tiles that carry it get
+   a lit stage, the way a bottle in a shop window gets a lamp. */
+.card__tile--stage {
+  background: radial-gradient(62% 58% at 50% 54%, #4d4d4d 0%, #232323 60%, #131313 100%);
+}
+.card__tile--stage .card__img { filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55)); }
+.card__img--wide { width: 100%; height: 100%; object-fit: cover; }
+
+/* The kit pieces have no photograph yet. Rather than borrow one, the
+   tile carries the wordmark on a band-tinted ground — plainly a
+   placeholder, and still the brand's own colour. */
+.card__ph {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 22%;
+}
+.card__ph img { width: 100%; height: auto; opacity: 0.92; }
+.card__ph--1 { background: radial-gradient(120% 120% at 30% 20%, #1d2a17, #0d0d0d); }
+.card__ph--2 { background: radial-gradient(120% 120% at 30% 20%, #2c2415, #0d0d0d); }
+.card__ph--3 { background: radial-gradient(120% 120% at 30% 20%, #2a1717, #0d0d0d); }
+.card__ph--4 { background: radial-gradient(120% 120% at 30% 20%, #1a1b2c, #0d0d0d); }
+
+.card__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.4rem 0.7rem;
+  border-radius: 4px;
+  background: var(--cream);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+.card__badge--new { background: var(--lilac); color: #1c1a4d; }
+.card__badge--soon { background: #2a2a2a; color: var(--ink-2); }
+
+.card__add {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #000;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: transform 0.12s ease, background-color 0.18s ease;
+}
+.card__add:hover { background: #e6e6e6; }
+.card__add:active { transform: scale(0.94); }
+
+.card__tier {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+.card__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+.card__dot--smoke { background: #8d8d8d; }
+.card__dot--clear { background: #cfe4ef; }
+.card__dot--band-1 { background: var(--band-1); }
+.card__dot--band-2 { background: var(--band-2); }
+.card__dot--band-4 { background: var(--band-4); }
+.card__dot--band-6 { background: var(--band-6); }
+
+.card__name {
+  margin-top: 0.55rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.card__price {
+  margin-top: 0.5rem;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.card__price span { color: var(--ink-3); }
+
+/* ── Story bands: the manifesto, the standard, the specs ───── */
+
+.band { padding: var(--section-y) 0; }
+.band--tint { background: var(--ground-2); }
+
+.band__head { margin-bottom: 1.75rem; }
+
+.band__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+  text-wrap: balance;
+}
+
+.story__inner { max-width: 46rem; }
+
+.story__creed {
+  font-size: clamp(1.125rem, 3.4vw, 1.4rem);
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin-top: 1.25rem;
+}
+.story__close {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4.5vw, 1.9rem);
+  line-height: 1.3;
+}
+.story__signature {
+  margin-top: 1.25rem;
+  color: var(--ink-3);
+  font-size: 0.9375rem;
+}
+
+.story__media { margin-top: 2.5rem; }
+
+.story__frame {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--panel);
+  aspect-ratio: 16 / 10;
+}
+.story__frame video { width: 100%; height: 100%; object-fit: cover; }
 
 /* The archive reel takes the frame over when the film ends: two slots
-   taking turns, the next picture decoded before it is faded up. */
-.about__reel { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.about__reel img {
+   crossfading, so a picture is never replaced by an empty frame. */
+.story__reel { position: absolute; inset: 0; pointer-events: none; }
+.story__reel img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 0.6s ease;
 }
-.about__reel img.is-current { opacity: 1; }
-/* The sourced quote under whichever creator the reel is showing.
-   Reserved height, so the frame does not jump as lines come and go;
-   frames with no sourced line show nothing. */
-.about__quotebox {
-  margin: 0.9rem auto 0;
-  max-width: 42ch;
-  min-height: 4.6em;
-  text-align: center;
+.story__reel img.is-current { opacity: 1; }
+
+.story__quotebox {
+  margin-top: 1rem;
+  border-left: 2px solid var(--band-3);
+  padding-left: 1rem;
 }
-.about__quote {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--ink-2);
-  text-wrap: pretty;
+.story__quote { font-size: 1.0625rem; line-height: 1.5; }
+.story__quote-by { margin-top: 0.35rem; color: var(--ink-3); font-size: 0.9375rem; }
+.story__caption { margin-top: 1rem; color: var(--ink-3); font-size: 0.9375rem; }
+
+/* The Standard: four rules, numbered in the mono voice. */
+.standard__list { margin-top: 1.5rem; counter-reset: rule; }
+.standard__list li {
+  counter-increment: rule;
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 4.4vw, 1.85rem);
+  line-height: 1.25;
 }
-.about__quote::before { content: "\201C"; }
-.about__quote::after { content: "\201D"; }
-.about__quote-by {
-  margin-top: 0.4rem;
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.standard__list li::before {
+  content: "0" counter(rule);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
   color: var(--ink-3);
 }
-.about__caption { margin-top: 0.7rem; text-align: center; font-size: 0.74rem; color: var(--ink-3); }
+.standard__close {
+  margin-top: 1.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+}
 
-/* ── The bottle ─────────────────────────────────────────────── */
-.product { padding-block: var(--section-y); }
-.product__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: center;
-}
-.product__stage { position: relative; display: grid; place-items: center; padding-block: 1rem; }
-.product__detail { padding-block: 1rem; }
-.product__halo {
-  position: absolute;
-  width: min(26rem, 84%);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, #4c3d26 0%, transparent 62%);
-}
-.product__bottle {
-  position: relative;
-  width: auto;
-  height: min(60vh, 545px);
-  /* The bottle is cut out, so this traces the glass rather than a photo's
-     rectangle — which is also why there is no corner radius any more:
-     there is no edge left to soften. Softened and dropped closer than a
-     photograph's shadow, since it now reads as the object's own. */
-  filter: drop-shadow(0 26px 38px rgba(0, 0, 0, 0.55));
-}
-.product__variants {
-  position: relative;
+/* In hand: the spec table. */
+.specs__grid {
   margin-top: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--ink-2);
-  font-size: 0.8rem;
-}
-.chip[aria-current="true"] { border-color: var(--ink-2); color: var(--ink); }
-.chip--soon { color: var(--ink-3); border-style: dashed; }
-.chip__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 1px solid var(--ink-3); }
-.chip__dot--smoke { background: #4a4a4c; }
-.chip__dot--clear { background: linear-gradient(135deg, #d8d5cd, #8f8d86); }
-
-.product__title {
-  margin-top: 1rem;
-  font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-.product__claim {
-  margin-top: 1.2rem;
-  max-width: 32ch;
-  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-.product__spec {
-  margin-top: 1rem;
-  max-width: 34ch;
-  font-size: 0.98rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-.product__offer {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
-  font-weight: 500;
-}
-.product__variant { letter-spacing: 0.01em; }
-.product__dash { color: var(--ink-3); }
-.product__price { font-variant-numeric: tabular-nums; }
-.purchase {
-  margin-top: clamp(1.6rem, 3vh, 2.2rem);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem 1.25rem;
-}
-.purchase__trust { margin-top: 0.9rem; font-size: 0.84rem; color: var(--ink-3); }
-.product__edition {
-  margin-top: 0.9rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Vates Creators ─────────────────────────────────────────
-   Fifteen square slots, three across. Unnamed until real creators
-   and their headshots arrive. */
-.trust { padding-block: var(--section-y); }
-.trust__head { text-align: center; display: grid; justify-items: center; }
-.trust__lead {
-  margin-top: 0.9rem;
-  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
-  font-weight: 500;
-  line-height: 1.3;
-  text-wrap: balance;
-}
-.trust__grid {
-  margin-top: clamp(2rem, 4.5vw, 3.2rem);
-  width: min(720px, 100%);
-  margin-inline: auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.9rem, 2.5vw, 1.6rem) clamp(0.8rem, 2vw, 1.4rem);
-}
-.trust__card { margin: 0; text-align: center; }
-.trust__face {
-  width: 100%;
-  aspect-ratio: 1;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1px;
+  background: var(--line);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  color: rgba(244, 238, 227, 0.32);   /* the silhouette's ink */
+  overflow: hidden;
 }
-/* Each square tinted from one of the wordmark's bands, kept near the
-   ground so the grid reads warm and even, not like a flag. */
-.trust__face--1 { background: color-mix(in srgb, #76b856 12%, var(--panel)); }
-.trust__face--2 { background: color-mix(in srgb, #f2ba4b 12%, var(--panel)); }
-.trust__face--3 { background: color-mix(in srgb, #e3873d 12%, var(--panel)); }
-.trust__face--4 { background: color-mix(in srgb, #cf4743 12%, var(--panel)); }
-.trust__face--5 { background: color-mix(in srgb, #8b4192 12%, var(--panel)); }
-.trust__face--6 { background: color-mix(in srgb, #4698d3 12%, var(--panel)); }
-.trust__name {
-  margin-top: 0.65rem;
-  font-size: clamp(0.84rem, 1.5vw, 0.98rem);
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--ink-3);
-}
-.trust__fineprint {
-  margin-top: clamp(1.6rem, 3vw, 2.2rem);
-  text-align: center;
-  font-size: 0.74rem;
-  color: var(--ink-3);
-}
-
-/* ── In hand ────────────────────────────────────────────────── */
-.specs { padding-block: var(--section-y); }
-.specs__grid {
-  margin-top: clamp(1.8rem, 4vw, 2.8rem);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  border-top: 1px solid var(--line);
-}
-.specs__cell { padding: 1.4rem 1.4rem 1.4rem 0; border-bottom: 1px solid var(--line); }
+.specs__cell { background: var(--ground); padding: 1.35rem 1.25rem; }
 .specs__cell dt {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
   color: var(--ink-3);
 }
-.specs__cell dd { margin-top: 0.5rem; font-size: 1.05rem; color: var(--ink); }
-.specs__cell dd small { display: block; margin-top: 0.15rem; font-size: 0.78rem; color: var(--ink-3); }
+.specs__cell dd { margin-top: 0.4rem; font-size: 1.125rem; }
+.specs__cell small { display: block; margin-top: 0.2rem; color: var(--ink-3); font-size: 0.875rem; }
 
-/* ── Plain pages ────────────────────────────────────────────
-   Confirmation, 404, and the three the payment processor requires.
-   They are read, not looked at, so they sit on the ground colour
-   and keep a measure narrow enough to follow. ----------------- */
-.page {
-  min-height: 100vh;
-  min-height: 100svh;
+/* ── The carousel of quotes ────────────────────────────────── */
+
+.voices { padding: var(--section-y) 0; text-align: center; }
+
+.voices__title {
+  font-size: clamp(1.6rem, 6vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.voices__track {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  padding: 0 max(1.25rem, calc((100vw - 1280px) / 2));
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.voices__track::-webkit-scrollbar { display: none; }
+
+.voice {
+  flex: 0 0 min(85vw, 26rem);
+  scroll-snap-align: center;
+  background: #fff;
+  color: #111;
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.5rem 1.25rem;
+  text-align: left;
   display: flex;
   flex-direction: column;
+  min-height: 17rem;
 }
 
-.page__main { flex: 1; padding-block: clamp(4rem, 12vw, 9rem); }
-.page__inner { max-width: 68ch; }
+.voice__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.voice__who { font-weight: 600; font-size: 1.0625rem; }
+.voice__when { color: #6b6b6b; font-size: 0.9375rem; white-space: nowrap; }
 
-.wordmark--page { width: min(220px, 45vw); }
-.wordmark--page img { width: 100%; height: auto; }
+.voice__bands {
+  height: 4px;
+  width: 4.5rem;
+  margin: 0.75rem 0 0.9rem;
+  border-radius: 4px;
+  background: var(--bands);
+}
 
-.page__title {
-  margin-top: clamp(2rem, 5vw, 3rem);
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
+.voice__quote {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+.voice__src {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  color: #6b6b6b;
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  line-height: 1.4;
+}
+
+.voices__note { margin-top: 1.25rem; color: var(--ink-3); font-size: 0.9375rem; }
+
+/* ── The closing ask ───────────────────────────────────────── */
+
+.cta { padding: var(--section-y) 0; border-top: 1px solid var(--line); text-align: center; }
+.cta__tag {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 8vw, 3.5rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
 }
+.cta__sub { margin-top: 0.9rem; color: var(--ink-2); }
+.cta__row { margin-top: 1.75rem; }
+.cta .btn { min-width: 16rem; }
 
-.page__lead {
-  margin-top: 1.25rem;
-  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-  line-height: 1.6;
-  color: var(--ink-2);
-}
+/* ── The signup band ───────────────────────────────────────── */
 
-.page__actions { margin-top: clamp(2rem, 4vw, 2.75rem); }
-.page__actions .btn { display: inline-block; text-decoration: none; }
+.signup { padding: var(--section-y) 0 3rem; }
 
-.page__note { margin-top: 1.5rem; font-size: 0.85rem; color: var(--ink-3); }
-
-/* The legal pages. Long-form and rarely read, but they have to be
-   legible when they are — and Stripe will not switch an account on
-   without them. */
-.prose { margin-top: clamp(2rem, 5vw, 3rem); }
-.prose h2 {
-  margin-top: 2.5rem;
-  font-size: 1.15rem;
+.signup__title {
+  font-size: clamp(1.5rem, 5.5vw, 2rem);
   font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.signup__modes { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+
+.signup__mode {
+  min-width: 7.5rem;
+  height: 3.25rem;
+  padding: 0 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+}
+.signup__mode[aria-pressed="true"] { background: var(--ink); color: #000; }
+
+.signup__row {
+  position: relative;
+  margin-top: 1.25rem;
+}
+
+.signup__input {
+  width: 100%;
+  height: 4rem;
+  padding: 0 3.75rem 0 1.25rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 1.0625rem;
+}
+.signup__input::placeholder { color: var(--ink-3); }
+.signup__input:focus { border-color: #3a3a3a; outline-offset: 2px; }
+
+.signup__go {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
   color: var(--ink);
 }
-.prose p, .prose li {
-  margin-top: 0.9rem;
-  font-size: 0.98rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-.prose ul { margin-top: 0.5rem; padding-left: 1.2rem; list-style: disc; }
-.prose a { color: var(--ink); }
-.prose__updated { font-size: 0.85rem; color: var(--ink-3); }
 
-/* The plain pages put two short lines in the footer; they get one
-   sized for what they actually put in it. */
-.page .site-footer { padding-block: clamp(1.5rem, 3.5vw, 2.25rem); }
-.page .site-footer__meta { margin-top: 0; }
-.page .page__main { padding-bottom: clamp(2.5rem, 6vw, 4rem); }
+.signup__fine { margin-top: 1rem; color: var(--ink-3); font-size: 0.875rem; }
+.signup__note { margin-top: 0.75rem; font-size: 0.9375rem; color: var(--ink); }
 
-/* ── The closing ask ────────────────────────────────────────── */
-.cta {
-  padding-block: var(--section-y);
-  background: var(--ground-deep);
-  border-top: 1px solid var(--line);
-}
-.cta__inner { display: grid; justify-items: center; text-align: center; }
-.cta__tag {
-  font-family: var(--font-display);
-  font-weight: 480;
-  font-size: clamp(2rem, 4.5vw, 3.6rem);
-  line-height: 1.1;
-  letter-spacing: -0.012em;
-  text-wrap: balance;
-}
-.cta__sub { margin-top: 0.9rem; font-size: 0.95rem; color: var(--ink-2); }
-.cta__row { margin-top: clamp(1.4rem, 3vh, 2rem); }
+/* ── The footer ────────────────────────────────────────────── */
 
-.waitlist { margin-top: clamp(2rem, 4vh, 2.8rem); display: grid; justify-items: center; gap: 0.8rem; }
-.waitlist__label { font-size: 0.88rem; color: var(--ink-3); max-width: 34ch; }
-.waitlist__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; }
-.waitlist__input {
-  width: min(20rem, 74vw);
-  padding: 0.85rem 1.1rem;
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  color: var(--ink);
-}
-.waitlist__input::placeholder { color: var(--ink-3); }
-.waitlist__btn {
-  background: transparent;
-  color: var(--ink-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1.4rem;
-  font-family: var(--font);
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 160ms ease, color 160ms ease;
-}
-.waitlist__btn:hover { border-color: var(--ink-3); color: var(--ink); }
-.waitlist__note {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--ink-2);
-  max-width: 44ch;
-  text-align: center;
+.site-footer { padding-top: 2.5rem; overflow: hidden; }
+
+.site-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 1.5rem;
 }
 
-/* ── The leaderboard ────────────────────────────────────────
-   leaderboard.html only. A table rather than a grid of cards:
-   the whole point is comparing one column down its length. */
-.vh {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip-path: inset(50%); white-space: nowrap;
-}
+.site-footer__col h2 { margin-bottom: 0.9rem; font-weight: 400; }
+.site-footer__col li + li { margin-top: 0.75rem; }
+.site-footer__col a { text-decoration: none; font-size: 1.0625rem; }
+.site-footer__col a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.board { margin-top: clamp(2rem, 5vw, 3rem); }
-.board__state {
-  padding: clamp(1.75rem, 5vw, 2.75rem);
-  border: 1px dashed var(--line);
-  border-radius: var(--radius-lg);
-  color: var(--ink-3);
-  font-size: 0.98rem;
-  line-height: 1.6;
-  text-align: center;
-}
+.site-footer__social { margin-top: 2.75rem; }
+.site-footer__social ul { display: flex; gap: 1.5rem; margin-top: 0.9rem; }
+.site-footer__social a { color: var(--ink); }
 
-.board__table { width: 100%; border-collapse: collapse; }
-.board__table thead th {
-  padding: 0 0 0.7rem;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-}
-.board__table tbody td {
-  padding: 0.95rem 0;
-  border-bottom: 1px solid var(--line);
-  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
-  color: var(--ink-2);
-  vertical-align: baseline;
-}
-.board__table tbody tr:last-child td { border-bottom: 0; }
-
-.board__rank {
-  width: 2.5rem;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-}
-.board__who { color: var(--ink); font-weight: 500; }
-.board__num { text-align: right; font-variant-numeric: tabular-nums; }
-.board__earned { color: var(--ink); font-weight: 600; }
-
-/* The top three carry the accent, which is the only ornament the
-   table gets — a medal column would be one more thing to read. */
-.board__table tbody tr.is-top .board__rank,
-.board__table tbody tr.is-top .board__earned { color: var(--accent); }
-
-.board__updated { margin-top: 1rem; font-size: 0.8rem; color: var(--ink-3); }
-
-.board__join {
-  margin-top: clamp(2rem, 5vw, 3rem);
-  padding-top: clamp(1.25rem, 3vw, 1.75rem);
-  border-top: 1px solid var(--line);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--ink-3);
-}
-.board__join a { color: var(--ink-2); }
-
-@media (max-width: 460px) {
-  .board__table thead th { font-size: 0.65rem; letter-spacing: 0.12em; }
-  .board__rank { width: 1.75rem; }
-}
-
-/* ── Footer ─────────────────────────────────────────────────── */
-.site-footer {
-  border-top: 1px solid var(--line);
-  padding-top: clamp(2.5rem, 6vw, 5rem);
-  padding-bottom: clamp(1.75rem, 4vw, 3rem);
-}
-
-.site-footer__inner { display: grid; justify-items: start; }
-
-.site-footer__meta {
-  margin-top: clamp(1.5rem, 3.5vw, 2.75rem);
-  font-size: 0.7rem;
-  letter-spacing: 0.01em;
-  color: var(--ink-3);
-}
-
-.site-footer__links {
-  margin-top: 0.75rem;
+.site-footer__legal {
+  margin-top: 2.5rem;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 1.25rem;
-  font-size: 0.84rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--ink-2);
 }
-.site-footer__links a { color: var(--ink-2); text-decoration: none; }
-.site-footer__links a:hover { color: var(--ink); text-decoration: underline; }
+.site-footer__legal a { text-decoration: none; }
 
-/* ── Order drawer ───────────────────────────────────────────── */
+.site-footer__meta {
+  margin-top: 1.5rem;
+  color: var(--ink-3);
+  font-size: 0.875rem;
+}
+
+/* The wordmark, enormous, cropped by the bottom of the page — the
+   signature every shop in this idiom signs off with. */
+.site-footer__mark {
+  margin: 2.5rem 0 0;
+  line-height: 0;
+  overflow: hidden;
+  height: clamp(5.5rem, 21vw, 15rem);
+}
+.site-footer__mark img {
+  width: min(118%, 1500px);
+  margin-inline: auto;
+  height: auto;
+}
+
+/* ── The contact bubble ────────────────────────────────────
+   Where the shops of this idiom park a live-chat widget. There is
+   no chat here and none is implied: it opens a mail message. --- */
+
+.bubble {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 70;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: #f2f2f2;
+  color: #111;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  text-decoration: none;
+}
+.bubble:hover { background: #fff; }
+
+/* ── The cart drawer ───────────────────────────────────────── */
+
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 90;
-  background: rgba(15, 11, 6, 0.62);
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.7);
   opacity: 0;
-  transition: opacity 320ms ease;
+  transition: opacity 0.3s ease;
 }
 .drawer-backdrop.is-open { opacity: 1; }
 
 .drawer {
   position: fixed;
+  z-index: 120;
   inset: 0 0 0 auto;
-  z-index: 100;
-  width: min(27rem, 100%);
+  width: min(28rem, 100vw);
   background: var(--ground);
   border-left: 1px solid var(--line);
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform 380ms cubic-bezier(0.22, 0.75, 0.2, 1);
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.drawer.is-open { transform: translateX(0); }
+.drawer.is-open { transform: none; }
 
 /* The six bands along the drawer's opening edge — the signature,
-   nowhere else. */
-.drawer::before { content: ""; height: 2px; flex: none; background: var(--bands); border-radius: var(--radius-lg) 0 0 0; }
+   at the one moment someone is deciding to pay. */
+.drawer::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--bands);
+}
 
 .drawer__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: clamp(1rem, 2vh, 1.5rem) clamp(1.25rem, 4vw, 2rem);
+  height: var(--masthead-h);
+  padding: 0 1rem 0 1.5rem;
   border-bottom: 1px solid var(--line);
 }
+.drawer__title { font-size: 1.125rem; font-weight: 500; }
+.drawer__close { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; }
 
-.drawer__title { font-size: 1.35rem; font-weight: 500; }
+.drawer__body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+.drawer__empty { color: var(--ink-3); }
 
-.drawer__close {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  color: var(--ink-2);
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: color 160ms ease;
-}
-.drawer__close:hover { color: var(--ink); }
-
-.drawer__body {
-  flex: 1;
-  overflow-y: auto;
-  padding: clamp(1rem, 2vh, 2rem) clamp(1.25rem, 4vw, 2rem);
-  display: flex;
-  flex-direction: column;
-}
-
-.drawer__empty { color: var(--ink-3); font-size: 0.95rem; }
-
-/* ── What's in the box ──────────────────────────────────────── */
-.box {
-  margin-top: clamp(1rem, 2.4vh, 2.5rem);
-  padding-top: clamp(1rem, 2.2vh, 2rem);
-  border-top: 1px solid var(--line);
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.box__title { display: block; color: var(--ink-3); }
-
-.box__list {
-  margin-top: clamp(0.75rem, 1.8vh, 1.1rem);
-  padding: 0;
-  list-style: none;
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: clamp(0.5rem, 1.35vh, 0.95rem);
-  padding-bottom: 0.25rem;
-}
-
-.box__list li {
-  position: relative;
-  padding-left: 1.5rem;
-  font-size: clamp(0.94rem, 1.9vh, 1.05rem);
-  line-height: 1.4;
-  color: var(--ink-2);
-}
-
-.box__list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.66em;
-  width: 0.8rem;
-  height: 1px;
-  background: var(--ink-3);
-}
-
-.box__mark {
-  display: inline-block;
-  height: 0.88em;
-  width: auto;
-  vertical-align: baseline;
-  position: relative;
-  top: 0.075em;
-  margin-inline: 0.12em;
-}
-
+.line-items { display: grid; gap: 1.25rem; }
 .line-item {
   display: grid;
-  grid-template-columns: 3.625rem minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: center;
-  padding-bottom: clamp(0.9rem, 2vh, 1.5rem);
-  border-bottom: 1px solid var(--line);
-}
-.line-item:last-child { border-bottom: 0; }
-
-.line-item__thumb {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  /* The bottle's own proportions. Cropping it to a frame of any other
-     shape took the cap off the top and the embossing off the base. */
-  aspect-ratio: 345 / 1222;
-  overflow: hidden;
-  padding: 0.35rem 0;
-}
-.line-item__thumb img { width: 100%; height: 100%; object-fit: contain; }
-
-.line-item__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  grid-template-columns: 4.5rem 1fr;
   gap: 1rem;
+  align-items: start;
 }
-
-.line-item__name { font-weight: 500; font-size: 1.1rem; }
-
-.line-item__aka {
-  font-weight: 400;
-  font-size: 0.92rem;
-  color: var(--ink-3);
-  white-space: nowrap;
+.line-item__thumb {
+  position: relative;
+  background: radial-gradient(70% 60% at 50% 55%, #3a3a3a 0%, #191919 70%);
+  border-radius: var(--radius-sm);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  padding: 0.4rem;
+  overflow: hidden;
 }
-
+.line-item__thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.4rem;
+  object-fit: contain;
+}
+.line-item__head { display: flex; justify-content: space-between; gap: 0.75rem; }
+.line-item__name { font-weight: 500; }
+.line-item__aka { color: var(--ink-3); font-weight: 400; }
 .line-item__controls {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
 }
 
@@ -1078,96 +1084,146 @@ a { color: var(--ink-2); }
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
-
-.stepper__btn {
-  width: 2.5rem;
-  height: 2.5rem;
-  background: transparent;
-  border: 0;
-  color: var(--ink-2);
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: color 160ms ease;
-}
-.stepper__btn:hover { color: var(--ink); }
-.stepper__btn:disabled { color: var(--ink-3); cursor: not-allowed; }
-
+.stepper__btn { width: 2.25rem; height: 2.25rem; font-size: 1.1rem; }
+.stepper__btn:hover { background: var(--panel-2); }
 .stepper__input {
-  width: 2.75rem;
-  height: 2.5rem;
-  background: transparent;
+  width: 2.5rem;
+  height: 2.25rem;
   border: 0;
-  border-inline: 1px solid var(--line);
+  background: transparent;
   text-align: center;
-  font-family: var(--font);
-  font-size: 0.9rem;
-  color: var(--ink);
+  font-variant-numeric: tabular-nums;
   -moz-appearance: textfield;
 }
 .stepper__input::-webkit-outer-spin-button,
-.stepper__input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+.stepper__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 .line-item__remove {
-  background: transparent;
-  border: 0;
-  padding: 0.35rem 0;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 0.68rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
   color: var(--ink-3);
-  transition: color 160ms ease;
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.line-item__remove:hover { color: var(--ink-2); }
+.line-item__remove:hover { color: var(--ink); }
 
-.drawer__foot {
-  border-top: 1px solid var(--line);
-  padding: clamp(1rem, 2vh, 2rem) clamp(1.25rem, 4vw, 2rem);
-  display: grid;
-  gap: clamp(0.7rem, 1.5vh, 1rem);
+/* What's in the box: fills the space the cart leaves, and does the
+   last bit of selling at the moment of deciding. */
+.box { margin-top: 2rem; border-top: 1px solid var(--line); padding-top: 1.5rem; }
+.box__title { display: block; margin-bottom: 0.9rem; }
+.box__list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
 }
+.box__mark { display: inline-block; height: 0.8em; width: auto; }
 
+.drawer__foot { border-top: 1px solid var(--line); padding: 1.25rem 1.5rem 1.75rem; }
 .drawer__total {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
-
-.drawer__total-value {
-  font-family: var(--font);
-  font-weight: 500;
-  font-size: 1.5rem;
-  font-variant-numeric: tabular-nums;
-}
-
+.drawer__total-value { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
 .drawer__notice {
-  margin: 0;
-  padding: 0.85rem 1rem;
+  margin-top: 0.9rem;
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  font-size: 0.88rem;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
   color: var(--ink-2);
+  font-size: 0.9375rem;
 }
+.drawer__fineprint { margin-top: 0.9rem; color: var(--ink-3); font-size: 0.8125rem; }
 
-.drawer__fineprint {
-  margin: 0;
-  font-family: var(--font);
-  font-size: 0.64rem;
-  letter-spacing: 0.01em;
+/* ── The plain pages ───────────────────────────────────────
+   Shipping, privacy, terms, the leaderboard, thanks, 404. They wear
+   the shop's masthead and footer with a single column between. --- */
+
+.page__main { padding: clamp(2.5rem, 8vw, 5rem) 0 var(--section-y); }
+.page__inner { max-width: 46rem; }
+
+.page__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 8vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.page__lead { margin-top: 1rem; color: var(--ink-2); font-size: 1.125rem; }
+.page__note { margin-top: 1rem; color: var(--ink-3); font-size: 0.9375rem; }
+.page__actions { margin-top: 2rem; }
+
+.prose { margin-top: 2rem; color: var(--ink-2); }
+.prose h2 {
+  margin: 2.25rem 0 0.75rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+.prose p { margin-bottom: 1rem; }
+.prose ul { margin: 0 0 1rem; padding-left: 1.1rem; list-style: disc; }
+.prose li { margin-bottom: 0.5rem; }
+.prose a { color: var(--ink); }
+.prose__updated { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ink-3); }
+
+/* ── The leaderboard ───────────────────────────────────────── */
+
+.board { margin-top: 2rem; }
+.board__state { color: var(--ink-3); font-family: var(--font-mono); font-size: 0.9375rem; }
+.board__table { width: 100%; border-collapse: collapse; }
+.board__table th {
+  text-align: left;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
   color: var(--ink-3);
 }
+.board__table td {
+  padding: 0.9rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.board__rank { width: 3rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.board__num { text-align: right; font-variant-numeric: tabular-nums; }
+.board__who { font-family: var(--font-mono); }
+.board__earned { font-weight: 500; }
+/* leaderboard.js marks the first three rows */
+.board__table tr.is-top .board__rank { color: var(--band-2); }
+.board__table tr.is-top .board__earned { color: var(--ink); }
+.board__updated { margin-top: 1rem; color: var(--ink-3); font-size: 0.875rem; }
+.board__join { margin-top: 2rem; color: var(--ink-2); }
+.board__join a { color: var(--ink); }
 
-/* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 860px) {
-  .about__media { gap: 2.2rem; }
-  .about__panel { width: min(320px, 92%); }
-  .product__grid { grid-template-columns: minmax(0, 1fr); gap: 1.8rem; }
-  .product__bottle { height: min(40vh, 385px); }
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (min-width: 40rem) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem 1.25rem; }
+  .site-footer__cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .signup__row { max-width: 34rem; }
+}
+
+@media (min-width: 60rem) {
+  :root { --masthead-h: 5rem; }
+
+  .masthead__mark img { height: 2.4rem; }
+  .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  .hero__media { height: clamp(28rem, 66vh, 44rem); }
+  .hero__media img { object-position: 55% 32%; }
+
+  .story__inner { max-width: none; display: grid; grid-template-columns: 1fr 1.1fr; gap: 3.5rem; align-items: start; }
+  .story__media { margin-top: 0; }
+
+  .standard__inner, .specs__inner { max-width: 60rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

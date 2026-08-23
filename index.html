@@ -7,7 +7,7 @@
 <title>No. 01 — a one-piece glass water bottle | vates</title>
 <meta name="description" content="No. 01 by vates. One piece of borosilicate glass, a machined steel cap, 32 ounces. $89, free shipping, 30-day returns. For the creators of the world.">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#2e251b">
+<meta name="theme-color" content="#000000">
 
 <!-- The origin these absolute URLs are built on. It has to match
      VATES.siteUrl in assets/js/config.js, and it cannot be filled in
@@ -38,8 +38,8 @@
 <link rel="stylesheet" href="assets/brand/loom-colors.css">
 <link rel="stylesheet" href="assets/css/styles.css">
 
-<!-- The opening is drawn on a canvas, so the first paint is type: the
-     two faces and the wordmark. The bottle arrives below the fold. -->
+<!-- The masthead and the hero are the first paint: the wordmark, the
+     two faces, and the photograph. -->
 <link rel="preload" href="assets/fonts/inter-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/brand/vates-wordmark.svg" as="image" type="image/svg+xml">
@@ -88,50 +88,210 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- The slot portrait for Vates Creators: a silhouette holding each
-     square until a real headshot and name replace it. -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <g id="avatar-sil" fill="currentColor">
-      <circle cx="32" cy="25" r="10.5"/>
-      <path d="M11.5 58 c2.5 -14.5 10.5 -20.5 20.5 -20.5 s18 6 20.5 20.5 z"/>
-    </g>
-  </defs>
-</svg>
+<!-- ── The announcement bar ──────────────────────────────────
+     Three standing facts, one at a time. Every line here is a
+     promise the shipping page also makes; nothing rotates through
+     that isn't true on every order. -->
+<div class="announce">
+  <button type="button" class="announce__nav announce__nav--prev" id="announce-prev" aria-label="Previous announcement">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+
+  <div class="announce__viewport" id="announce" aria-live="off">
+    <p class="announce__item is-current"><a href="shipping.html">Free shipping on every order.</a></p>
+    <p class="announce__item"><a href="shipping.html#returns">30-day returns, for any reason or none.</a></p>
+    <p class="announce__item"><a href="#product-no-01">An edition of 500 — numbered by hand.</a></p>
+  </div>
+
+  <button type="button" class="announce__nav announce__nav--next" id="announce-next" aria-label="Next announcement">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- ── The masthead ─────────────────────────────────────────── -->
+<header class="masthead">
+  <div class="container masthead__inner">
+    <button type="button" class="masthead__menu" id="menu-open" aria-label="Open menu"
+            aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <p class="masthead__mark">
+      <a href="./" aria-label="vates — home">
+        <img src="assets/brand/vates-wordmark.svg" alt="vates" width="893" height="184">
+      </a>
+    </p>
+
+    <div class="masthead__tools">
+      <!-- Both icons go somewhere real: the shop is one product, so
+           there is nothing to search and no account to sign in to. -->
+      <a class="icon-btn" href="leaderboard.html" aria-label="Creator leaderboard">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>
+        </svg>
+      </a>
+      <a class="icon-btn" href="shipping.html#reaching" aria-label="Help and shipping">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.2 2.4c-.5.2-.7.6-.7 1.1v.5"/><path d="M12 17h.01"/>
+        </svg>
+      </a>
+      <button type="button" class="cart-pill" id="cart-open">
+        Cart <span class="cart-pill__count" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ── The category rail ────────────────────────────────────── -->
+<nav class="rail" aria-label="Shop sections">
+  <div class="container">
+    <div class="rail__track">
+      <a class="rail__item" href="#shop" data-tab="bottles">
+        <span class="rail__thumb rail__thumb--tall"><img src="assets/img/no-01-thumb.webp" alt="" width="345" height="1222"></span>
+        Bottles
+      </a>
+      <a class="rail__item" href="#shop" data-tab="kit">
+        <span class="rail__thumb rail__thumb--mark"><img src="assets/brand/vates-mark.svg" alt="" width="184" height="184"></span>
+        The kit
+      </a>
+      <a class="rail__item" href="#story">
+        <span class="rail__thumb"><img src="assets/img/reel/09.webp" alt="" loading="lazy"></span>
+        Our story
+      </a>
+      <a class="rail__item" href="#standard">
+        <span class="rail__thumb"><img src="assets/img/reel/31.webp" alt="" loading="lazy"></span>
+        The Standard
+      </a>
+      <a class="rail__item" href="#specs">
+        <span class="rail__thumb"><img src="assets/img/no-01.webp" alt="" loading="lazy"></span>
+        In hand
+      </a>
+      <a class="rail__item" href="leaderboard.html">
+        <span class="rail__thumb"><img src="assets/img/reel/30.webp" alt="" loading="lazy"></span>
+        Leaderboard
+      </a>
+    </div>
+  </div>
+</nav>
 
 <main id="main">
 
-  <!-- ── The opening: the mark and the words, over the seer's eye ──
-       The iris is drawn on the canvas by app.js: band-coloured rings
-       breathing around a dark pupil. It pauses off screen, in hidden
-       tabs, and under reduced motion. -->
+  <!-- ── The hero ───────────────────────────────────────────── -->
   <section class="hero" id="top">
-    <canvas class="hero__canvas" id="iris" aria-hidden="true"></canvas>
+    <div class="hero__media">
+      <img src="assets/img/no-01.webp" width="1179" height="1104" fetchpriority="high"
+           alt="A designer at a workbench with two No. 01 bottles beside the drawings — one clear, one smoke grey.">
+    </div>
+    <div class="hero__copy container">
+      <h1 class="hero__tag">for the creators of&nbsp;the&nbsp;world.</h1>
+      <p class="hero__sub">Essentials for the work, so your mind stays on the vision.</p>
+    </div>
+  </section>
 
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker__track">
-        <span>Visionaries</span><i class="sq sq-1"></i><span>Seers</span><i class="sq sq-3"></i><span>Revelators</span><i class="sq sq-5"></i><span>Visionaries</span><i class="sq sq-2"></i><span>Seers</span><i class="sq sq-4"></i><span>Revelators</span><i class="sq sq-6"></i>
-        <span>Visionaries</span><i class="sq sq-1"></i><span>Seers</span><i class="sq sq-3"></i><span>Revelators</span><i class="sq sq-5"></i><span>Visionaries</span><i class="sq sq-2"></i><span>Seers</span><i class="sq sq-4"></i><span>Revelators</span><i class="sq sq-6"></i>
+  <!-- ── The shop ───────────────────────────────────────────
+       Three collections over one grid: app.js filters the tiles by
+       their data-collection list and counts what is left. Only the
+       tiles that can actually be bought carry an add button. -->
+  <section class="shop" id="shop">
+    <div class="container">
+
+      <h2 class="vh">Shop</h2>
+
+      <div class="tabs" role="tablist" aria-label="Collections">
+        <button type="button" class="tabs__btn" role="tab" id="tab-best"
+                aria-controls="grid" aria-selected="true" data-collection="best">Best sellers</button>
+        <button type="button" class="tabs__btn" role="tab" id="tab-bottles"
+                aria-controls="grid" aria-selected="false" data-collection="bottles">Bottles</button>
+        <button type="button" class="tabs__btn" role="tab" id="tab-kit"
+                aria-controls="grid" aria-selected="false" data-collection="kit">The kit</button>
       </div>
+      <div class="tabs__track" aria-hidden="true"><span class="tabs__thumb" id="tabs-thumb"></span></div>
+
+      <p class="label shop__count" id="shop-count" role="status">2 Products</p>
+
+      <ul class="cards" id="grid" role="tabpanel" aria-labelledby="tab-best">
+
+        <li class="card" id="product-no-01" data-collection="best bottles">
+          <div class="card__tile card__tile--stage">
+            <p class="card__badge">In stock</p>
+            <img class="card__img" src="assets/img/no-01-thumb.webp" width="345" height="1222"
+                 alt="The No. 01 bottle in smoke grey: faceted glass in an irregular
+                      cracked-ice pattern, tapering to a machined steel cap, with
+                      “For the creators of the world” embossed around the base.">
+            <button type="button" class="card__add" data-purchase aria-label="Add No. 01 in smoke to your cart">+</button>
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--smoke" aria-hidden="true"></span> Smoke</p>
+          <h3 class="card__name">No.&thinsp;01</h3>
+          <p class="card__price">$89 <span>|</span> 32 oz</p>
+          <!-- Reads window.VATES.product.edition in config.js. With no number
+               set, this line stands as written — true as long as the run is
+               actually capped at editionTotal. Set edition.number once real
+               inventory exists and app.js upgrades it to "No. 041 of 500" on
+               its own. Never fed by anything that counts on its own: a figure
+               that ticks up, or a number nobody can verify, is fabricated
+               scarcity — a trust problem first and a regulatory one (FTC,
+               CMA) second. -->
+          <p class="card__price label" id="product-edition">An edition of 500 — numbered by hand</p>
+        </li>
+
+        <li class="card" data-collection="best bottles">
+          <div class="card__tile card__tile--stage">
+            <p class="card__badge card__badge--soon">Coming soon</p>
+            <img class="card__img" src="assets/img/no-01-thumb.webp" width="345" height="1222"
+                 style="filter: brightness(1.35) saturate(0.7)"
+                 alt="The No. 01 bottle, shown in the clear glass finish still to come.">
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--clear" aria-hidden="true"></span> Clear</p>
+          <h3 class="card__name">No.&thinsp;01</h3>
+          <p class="card__price">Not yet <span>|</span> 32 oz</p>
+        </li>
+
+        <!-- The kit: what is in every box. No photographs of these exist
+             yet, so the tiles carry the wordmark on a band-tinted ground
+             rather than a borrowed picture. None of them is sold on its
+             own, so none of them has an add button or a price. -->
+        <li class="card" data-collection="kit">
+          <div class="card__tile">
+            <p class="card__badge">In the box</p>
+            <span class="card__ph card__ph--1"><img src="assets/brand/vates-wordmark.svg" alt="" width="893" height="184"></span>
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--band-1" aria-hidden="true"></span> Paper</p>
+          <h3 class="card__name">The notepad</h3>
+          <p class="card__price">Included <span>|</span> 60 pages, unruled</p>
+        </li>
+
+        <li class="card" data-collection="kit">
+          <div class="card__tile">
+            <p class="card__badge">In the box</p>
+            <span class="card__ph card__ph--2"><img src="assets/brand/vates-wordmark.svg" alt="" width="893" height="184"></span>
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--band-2" aria-hidden="true"></span> Steel</p>
+          <h3 class="card__name">The pen</h3>
+          <p class="card__price">Included <span>|</span> one per box</p>
+        </li>
+
+        <li class="card" data-collection="kit">
+          <div class="card__tile">
+            <p class="card__badge">In the box</p>
+            <span class="card__ph card__ph--3"><img src="assets/brand/vates-wordmark.svg" alt="" width="893" height="184"></span>
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--band-4" aria-hidden="true"></span> Print</p>
+          <h3 class="card__name">The Page of Inspiration</h3>
+          <p class="card__price">Included <span>|</span> one sheet</p>
+        </li>
+
+        <li class="card" data-collection="kit">
+          <div class="card__tile">
+            <p class="card__badge">In the box</p>
+            <span class="card__ph card__ph--4"><img src="assets/brand/vates-wordmark.svg" alt="" width="893" height="184"></span>
+          </div>
+          <p class="card__tier"><span class="card__dot card__dot--band-6" aria-hidden="true"></span> Hand</p>
+          <h3 class="card__name">The welcome letter</h3>
+          <p class="card__price">Included <span>|</span> numbered by hand</p>
+        </li>
+
+      </ul>
     </div>
-
-    <div class="hero__scrim" aria-hidden="true"></div>
-
-    <header class="top">
-      <h1 class="top__mark rise">
-        <img src="assets/brand/vates-wordmark.svg" alt="vates" width="893" height="184">
-      </h1>
-    </header>
-
-    <div class="hero__copy">
-      <h2 class="hero__tag rise rise-2">for the creators of&nbsp;the&nbsp;world.</h2>
-      <p class="hero__intro rise rise-3">Essentials for the work, so your mind
-        stays on the vision.</p>
-    </div>
-
-    <a class="hero__cue" href="#about" aria-label="Scroll on">
-      <span class="hero__cue-line" aria-hidden="true"></span>
-    </a>
   </section>
 
   <hr class="filament" aria-hidden="true">
@@ -150,7 +310,7 @@
   ],
   "09": [
     { "q": "Life can only be understood backwards; but it must be lived forwards.",
-      "who": "S\u00f8ren Kierkegaard",
+      "who": "Søren Kierkegaard",
       "src": "Journals IV A 164, 1843" }
   ],
   "10": [
@@ -211,121 +371,57 @@
 }
 </script>
 
-  <!-- ── Who we are: the film, then the creators ──────────────
+  <!-- ── Our story: the letter, then the film ────────────────
        The film plays on a tap. When it ends, app.js hands the same
        frame to the archive reel — data-frame-src is the path with
        {n} standing in for a two-digit number, counted from 01 up
        to data-frame-count. Replaying the film puts it back on top. -->
-  <section class="about" id="about">
-    <div class="container about__inner">
-      <p class="label">Who we are</p>
-      <h2 class="about__title">A message from the founders</h2>
-      <p class="about__body about__body--creed">If you quit the job everyone said was smart to keep.<br>
-        If you're building the thing that doesn't have a name yet.<br>
-        If you took the path with no map,</p>
-      <p class="about__body about__body--close">Then welcome, we're glad you're
-        here with us.</p>
-      <p class="about__signature"><i>Vates</i> &mdash; Latin for the one who sees
-        what isn't there yet.</p>
+  <section class="band story" id="story">
+    <div class="container story__inner">
+      <div>
+        <div class="band__head">
+          <p class="label">Our story</p>
+          <h2 class="band__title">A message from the founders</h2>
+        </div>
+        <p class="story__creed">If you quit the job everyone said was smart to keep.<br>
+          If you're building the thing that doesn't have a name yet.<br>
+          If you took the path with no map,</p>
+        <p class="story__close">Then welcome, we're glad you're here with us.</p>
+        <p class="story__signature"><i>Vates</i> — Latin for the one who sees
+          what isn't there yet.</p>
+      </div>
 
-      <div class="about__media">
-        <div class="about__panel">
-          <div class="about__frame">
-            <video id="about-film" controls playsinline preload="metadata"
-                   poster="assets/img/hero-poster.jpg">
-              <source src="assets/video/intro.mp4"  type="video/mp4">
-              <source src="assets/video/intro.webm" type="video/webm">
-            </video>
-            <div class="about__reel" id="about-reel" aria-hidden="true"
-                 data-frame-src="assets/img/reel/{n}.webp"
-                 data-frame-count="32">
-              <img alt="" decoding="async">
-              <img alt="" decoding="async">
-            </div>
+      <div class="story__media">
+        <div class="story__frame">
+          <video id="about-film" controls playsinline preload="metadata"
+                 poster="assets/img/hero-poster.jpg">
+            <source src="assets/video/intro.mp4"  type="video/mp4">
+            <source src="assets/video/intro.webm" type="video/webm">
+          </video>
+          <div class="story__reel" id="about-reel" aria-hidden="true"
+               data-frame-src="assets/img/reel/{n}.webp"
+               data-frame-count="32">
+            <img alt="" decoding="async">
+            <img alt="" decoding="async">
           </div>
-          <figure class="about__quotebox" id="about-quote" aria-hidden="true" hidden>
-            <blockquote class="about__quote"></blockquote>
-            <figcaption class="about__quote-by"></figcaption>
-          </figure>
-          <p class="about__caption">The film — 24 seconds, plays on your tap.
-            The creators follow it.</p>
         </div>
+        <figure class="story__quotebox" id="about-quote" aria-hidden="true" hidden>
+          <blockquote class="story__quote"></blockquote>
+          <figcaption class="story__quote-by"></figcaption>
+        </figure>
+        <p class="story__caption">The film — 24 seconds, plays on your tap.
+          The creators follow it.</p>
       </div>
     </div>
   </section>
 
-  <hr class="filament" aria-hidden="true">
-
-  <!-- ── The bridge: from the vision to the object ────────────
-       The one seam with no divider under it: the bridge leans into
-       the bottle it introduces, so the two read as one movement. -->
-  <section class="bridge" id="bridge">
-    <div class="container bridge__inner">
-      <p class="bridge__eyebrow">Not just another bottle.</p>
-      <h2 class="bridge__title">The things you carry should matter.</h2>
-      <p class="bridge__line">Something you reach for every day.</p>
-      <p class="bridge__line">Something that sits beside the work.</p>
-      <p class="bridge__line">Something that reminds you why you're doing it.</p>
-      <p class="bridge__meet">Meet No.&thinsp;01.</p>
-    </div>
-  </section>
-
-  <!-- ── The bottle ──────────────────────────────────────────── -->
-  <section class="product" id="product">
-    <div class="container product__grid">
-      <div class="product__stage">
-        <div class="product__halo" aria-hidden="true"></div>
-        <img class="product__bottle" src="assets/img/no-01-thumb.webp"
-             width="345" height="1222"
-             alt="The No. 01 bottle in smoke grey: faceted glass in an irregular
-                  cracked-ice pattern, tapering to a machined steel cap, with
-                  “For the creators of the world” embossed around the base.">
-        <div class="product__variants">
-          <span class="chip" aria-current="true">
-            <span class="chip__dot chip__dot--smoke" aria-hidden="true"></span> Smoke
-          </span>
-          <span class="chip chip--soon">
-            <span class="chip__dot chip__dot--clear" aria-hidden="true"></span> Clear — soon
-          </span>
-        </div>
-      </div>
-
-      <div class="product__detail">
-        <p class="label">The bottle</p>
-        <h2 class="product__title">No.&thinsp;01</h2>
-        <p class="product__claim">A vessel for the work.</p>
-        <p class="product__spec">One piece of glass.<br>
-          No liner. No seam. No unnecessary complexity.</p>
-        <p class="product__spec">Designed to sit quietly beside you while you build
-          what's next.</p>
-        <form class="purchase" id="purchase-form">
-          <p class="product__offer"><span class="product__variant">Smoke</span>
-            <span class="product__dash" aria-hidden="true">&mdash;</span>
-            <span class="product__price">$89</span></p>
-          <button type="submit" class="btn btn--primary">Make it yours</button>
-        </form>
-        <!-- Reads window.VATES.product.edition in config.js. With no number
-             set, this line stands as written — true as long as the run is
-             actually capped at editionTotal. Set edition.number once real
-             inventory exists and app.js upgrades it to "No. 041 of 500" on
-             its own. Never fed by anything that counts on its own: a figure
-             that ticks up, or a number nobody can verify, is fabricated
-             scarcity — a trust problem first and a regulatory one (FTC,
-             CMA) second. -->
-        <p class="product__edition" id="product-edition">An edition of 500 — numbered by hand</p>
-        <p class="purchase__trust">
-          Free shipping · 30-day returns · Apple&nbsp;Pay · Google&nbsp;Pay
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="filament" aria-hidden="true">
-
-  <!-- ── The Vates Standard ──────────────────────────────────── -->
-  <section class="standard" id="standard">
+  <!-- ── The Vates Standard ─────────────────────────────────── -->
+  <section class="band band--tint" id="standard">
     <div class="container standard__inner">
-      <p class="label">The Vates Standard</p>
+      <div class="band__head">
+        <p class="label">The Vates Standard</p>
+        <h2 class="band__title">Four rules, and no fifth.</h2>
+      </div>
       <ol class="standard__list">
         <li>Question what exists.</li>
         <li>Create more than you consume.</li>
@@ -336,47 +432,13 @@
     </div>
   </section>
 
-  <hr class="filament" aria-hidden="true">
-
-  <!-- ── Vates Creators ───────────────────────────────────────
-       Fifteen slots, holding the layout until real creators and their
-       headshots arrive. Deliberately unnamed: an invented name under a
-       face is an endorsement nobody gave. Replace the silhouette and
-       the dash in each card together, or leave the card out. -->
-  <section class="trust" id="creators">
-    <div class="container">
-      <div class="trust__head">
-        <p class="label">Vates Creators</p>
-        <h2 class="trust__lead">The ones building with it.</h2>
+  <!-- ── In hand ────────────────────────────────────────────── -->
+  <section class="band" id="specs">
+    <div class="container specs__inner">
+      <div class="band__head">
+        <p class="label">In hand</p>
+        <h2 class="band__title">What you are actually holding.</h2>
       </div>
-      <ul class="trust__grid">
-        <li class="trust__card"><svg class="trust__face trust__face--1" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--2" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--3" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--4" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--5" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--6" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--4" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--1" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--5" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--2" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--6" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--3" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--2" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--6" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-        <li class="trust__card"><svg class="trust__face trust__face--1" viewBox="0 0 64 64" role="img" aria-label="Creator slot, awaiting a portrait"><use href="#avatar-sil"/></svg><p class="trust__name">&mdash;</p></li>
-      </ul>
-      <p class="trust__fineprint">Fifteen slots, waiting on real creators — faces and
-        names to come.</p>
-    </div>
-  </section>
-
-  <hr class="filament" aria-hidden="true">
-
-  <!-- ── In hand ─────────────────────────────────────────────── -->
-  <section class="specs" id="specs">
-    <div class="container">
-      <p class="label">In hand</p>
       <dl class="specs__grid">
         <div class="specs__cell"><dt>Capacity</dt><dd>32 oz · 950 ml</dd></div>
         <div class="specs__cell"><dt>Glass</dt><dd>Borosilicate, one piece<small>No seam, no liner</small></dd></div>
@@ -388,48 +450,217 @@
     </div>
   </section>
 
+  <!-- ── The carousel ───────────────────────────────────────
+       Where a shop this shape puts customer reviews. There are no
+       customers yet, and an invented review is a lie with a star
+       rating on it — so the cards carry the sourced lines from the
+       archive reel instead, and say so underneath. Swap them for
+       real, verified reviews the day there are some. -->
+  <section class="voices" id="voices">
+    <div class="container">
+      <h2 class="voices__title">Real people. Real vision.</h2>
+    </div>
+
+    <div class="voices__track">
+      <figure class="voice">
+        <div class="voice__head"><span class="voice__who">Isaac Newton</span><span class="voice__when">1675</span></div>
+        <div class="voice__bands" aria-hidden="true"></div>
+        <blockquote class="voice__quote">If I have seen further it is by standing on the shoulders of giants.</blockquote>
+        <figcaption class="voice__src">Letter to Robert Hooke, 5 February 1675</figcaption>
+      </figure>
+
+      <figure class="voice">
+        <div class="voice__head"><span class="voice__who">Ada Lovelace</span><span class="voice__when">1843</span></div>
+        <div class="voice__bands" aria-hidden="true"></div>
+        <blockquote class="voice__quote">The Analytical Engine weaves algebraical patterns just as the Jacquard-loom weaves flowers and leaves.</blockquote>
+        <figcaption class="voice__src">Note A to her translation of Menabrea's Sketch of the Analytical Engine, 1843</figcaption>
+      </figure>
+
+      <figure class="voice">
+        <div class="voice__head"><span class="voice__who">Buzz Aldrin</span><span class="voice__when">1969</span></div>
+        <div class="voice__bands" aria-hidden="true"></div>
+        <blockquote class="voice__quote">Magnificent desolation.</blockquote>
+        <figcaption class="voice__src">Apollo 11 air-to-ground transcript, 20 July 1969</figcaption>
+      </figure>
+
+      <figure class="voice">
+        <div class="voice__head"><span class="voice__who">Steve Jobs</span><span class="voice__when">2005</span></div>
+        <div class="voice__bands" aria-hidden="true"></div>
+        <blockquote class="voice__quote">Stay hungry. Stay foolish.</blockquote>
+        <figcaption class="voice__src">Stanford commencement address, 12 June 2005, quoting the Whole Earth Catalog</figcaption>
+      </figure>
+
+      <figure class="voice">
+        <div class="voice__head"><span class="voice__who">Albert Einstein</span><span class="voice__when">1929</span></div>
+        <div class="voice__bands" aria-hidden="true"></div>
+        <blockquote class="voice__quote">Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world.</blockquote>
+        <figcaption class="voice__src">Interview with George Sylvester Viereck, Saturday Evening Post, 26 October 1929</figcaption>
+      </figure>
+    </div>
+
+    <div class="container">
+      <p class="voices__note">Sourced lines from the archive — not customer
+        reviews. No. 01 has not shipped to anyone yet, so there are none to
+        show, and an invented one is a lie with a star rating on it.</p>
+    </div>
+  </section>
+
 </main>
 
 <!-- ── The closing ask ───────────────────────────────────────── -->
 <section class="cta" id="cta">
-  <div class="container cta__inner">
+  <div class="container">
     <h2 class="cta__tag">Take No.&thinsp;01 with you.</h2>
     <p class="cta__sub">$89 · an edition of 500 · free shipping, 30-day returns</p>
-    <div class="cta__row">
+    <p class="cta__row">
       <button type="button" class="btn btn--primary" data-purchase>Purchase</button>
-    </div>
-    <!-- A demonstration until it has somewhere real to send an address:
-         see the note in app.js's waitlist handler. -->
-    <form class="waitlist" id="waitlist">
-      <label class="waitlist__label" for="waitlist-email">Not ready yet? The waitlist hears about the next release first.</label>
-      <div class="waitlist__row">
-        <input class="waitlist__input" id="waitlist-email" type="email" required
-               placeholder="you@studio.com" autocomplete="email">
-        <button type="submit" class="waitlist__btn">Join the waitlist</button>
+    </p>
+  </div>
+</section>
+
+<!-- ── The signup band ──────────────────────────────────────── -->
+<section class="signup" id="signup">
+  <div class="container">
+    <h2 class="signup__title">Don't miss out on vates updates.</h2>
+
+    <form id="waitlist" novalidate>
+      <div class="signup__modes" role="group" aria-label="How to hear from us">
+        <button type="button" class="signup__mode" id="mode-email" aria-pressed="true">Email</button>
+        <button type="button" class="signup__mode" id="mode-sms" aria-pressed="false">SMS</button>
       </div>
-      <p class="waitlist__note" id="waitlist-note" role="status" hidden></p>
+
+      <div class="signup__row">
+        <label class="vh" for="waitlist-email" id="waitlist-label">Your email address</label>
+        <input class="signup__input" id="waitlist-email" type="email" required
+               placeholder="Enter Your Email." autocomplete="email">
+        <button type="submit" class="signup__go" aria-label="Join the list">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <p class="signup__fine">*By completing this form you are signing up to
+        receive our marketing and can unsubscribe at any time.</p>
+      <p class="signup__note" id="waitlist-note" role="status" hidden></p>
     </form>
   </div>
 </section>
 
-<!-- ── Footer ────────────────────────────────────────────────── -->
+<!-- ── The footer ───────────────────────────────────────────── -->
 <footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p class="wordmark wordmark--footer">
-      <img src="assets/brand/vates-wordmark.svg" alt="vates" width="893" height="184">
-    </p>
-    <p class="site-footer__meta">© <span id="year">2026</span> vates — No. 01, open release, numbered by hand.</p>
-    <p class="site-footer__links">
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="shipping.html">Shipping &amp; returns</a>
+  <div class="container">
+    <div class="site-footer__cols">
+      <section class="site-footer__col">
+        <h2 class="label">Support</h2>
+        <ul>
+          <li><a href="shipping.html">Shipping</a></li>
+          <li><a href="shipping.html#returns">Returns</a></li>
+          <li><a href="shipping.html#broken">Arrived broken</a></li>
+          <li><a href="shipping.html#reaching">Contact us</a></li>
+        </ul>
+      </section>
+
+      <section class="site-footer__col">
+        <h2 class="label">About</h2>
+        <ul>
+          <li><a href="#story">Our story</a></li>
+          <li><a href="#standard">The Standard</a></li>
+          <li><a href="#specs">In hand</a></li>
+          <li><a href="#shop">The bottle</a></li>
+        </ul>
+      </section>
+
+      <section class="site-footer__col">
+        <h2 class="label">Partnership</h2>
+        <ul>
+          <li><a href="leaderboard.html">Leaderboard</a></li>
+          <li><a href="https://instagram.com/vates" rel="noopener">Sell it with us</a></li>
+        </ul>
+      </section>
+
+      <section class="site-footer__col">
+        <h2 class="label">Legal</h2>
+        <ul>
+          <li><a href="privacy.html">Privacy policy</a></li>
+          <li><a href="terms.html">Terms of service</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="site-footer__social">
+      <h2 class="label">Social</h2>
+      <ul>
+        <li>
+          <a href="https://instagram.com/vates" rel="noopener" aria-label="vates on Instagram">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://tiktok.com/@.vates" rel="noopener" aria-label="vates on TikTok">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+              <path d="M14 3h2.6a5.4 5.4 0 0 0 4.4 4.3v2.6a8 8 0 0 1-4.4-1.4v5.9a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v2.7a3.2 3.2 0 1 0 2.4 3.1z"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <p class="site-footer__legal">
+      <a href="privacy.html#advertising">Your privacy choices</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </p>
+
+    <p class="site-footer__meta">© <span id="year">2026</span> vates — No. 01, open release, numbered by hand.</p>
   </div>
+
+  <p class="site-footer__mark">
+    <img src="assets/brand/vates-wordmark.svg" alt="vates" width="893" height="184">
+  </p>
 </footer>
 
-<!-- ── Order drawer ──────────────────────────────────────────── -->
+<!-- Where a shop this shape parks a live-chat widget. There is no chat
+     here, so it goes to the page that says how to reach us. -->
+<a class="bubble" href="shipping.html#reaching" aria-label="How to reach us">
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>
+  </svg>
+</a>
+
+<!-- ── The menu panel and the cart drawer ────────────────────
+     They share one backdrop; app.js only ever has one of them open. -->
 <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+
+<aside class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="menu__head">
+    <img src="assets/brand/vates-wordmark.svg" alt="vates" width="893" height="184">
+    <button type="button" class="icon-btn" id="menu-close" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none"
+           stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="menu__body">
+    <ul class="menu__list">
+      <li><a href="#shop">Bottles</a></li>
+      <li><a href="#shop" data-tab="kit">The kit</a></li>
+      <li><a href="#story">Our story</a></li>
+      <li><a href="#standard">The Standard</a></li>
+      <li><a href="#specs">In hand</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+    </ul>
+
+    <p class="label menu__label">Support</p>
+    <ul class="menu__list menu__list--plain">
+      <li><a href="shipping.html">Shipping &amp; returns</a></li>
+      <li><a href="shipping.html#reaching">Contact us</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="terms.html">Terms</a></li>
+    </ul>
+  </div>
+</aside>
 
 <aside class="drawer" id="order-drawer" role="dialog" aria-modal="true"
        aria-labelledby="drawer-title" hidden>

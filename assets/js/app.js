@@ -1,8 +1,9 @@
 /* ============================================================
    vates — storefront behaviour
    Client-side state only. Nothing is persisted, nothing is sent.
-   Three parts: the store (cart, drawer, checkout), the iris (the
-   opening's canvas), and the film-to-reel handover in Who we are.
+   Four parts: the store (cart, drawer, checkout), the shop UI (the
+   announcement bar, the menu panel, the collection tabs, the signup
+   band), and the film-to-reel handover in Our story.
    ============================================================ */
 (function () {
   "use strict";
@@ -24,17 +25,23 @@
 
   var el = {
     year: document.getElementById("year"),
-    form: document.getElementById("purchase-form"),
     drawer: document.getElementById("order-drawer"),
     backdrop: document.getElementById("drawer-backdrop"),
     close: document.getElementById("drawer-close"),
+    open: document.getElementById("cart-open"),
+    count: document.getElementById("cart-count"),
     items: document.getElementById("line-items"),
     empty: document.getElementById("drawer-empty"),
     box: document.getElementById("box-contents"),
     total: document.getElementById("drawer-total"),
     checkout: document.getElementById("checkout"),
-    notice: document.getElementById("drawer-notice")
+    notice: document.getElementById("drawer-notice"),
+    menu: document.getElementById("menu"),
+    menuOpen: document.getElementById("menu-open"),
+    menuClose: document.getElementById("menu-close")
   };
+
+  if (el.year) el.year.textContent = String(new Date().getFullYear());
 
   /* ── helpers ─────────────────────────────────────────────── */
 
@@ -49,6 +56,10 @@
 
   function totalPrice() {
     return cart.reduce(function (sum, line) { return sum + line.qty * PRODUCT.price; }, 0);
+  }
+
+  function totalQty() {
+    return cart.reduce(function (sum, line) { return sum + line.qty; }, 0);
   }
 
   /* ── cart ────────────────────────────────────────────────── */
@@ -91,7 +102,7 @@
       "<div>" +
         '<div class="line-item__head">' +
           '<span class="line-item__name">' + PRODUCT.name +
-            '<span class="line-item__aka"> — smoke</span>' +
+            '<span class="line-item__aka"> — smoke</span>' +
           "</span>" +
         "</div>" +
         '<div class="line-item__controls">' +
@@ -147,9 +158,10 @@
     if (el.box) el.box.hidden = cart.length === 0;
     el.total.textContent = money(totalPrice());
     el.checkout.disabled = cart.length === 0;
+    if (el.count) el.count.textContent = String(totalQty());
 
     if (cart.length === 0) hideNotice();
-    if (isOpen()) restoreFocus(token);
+    if (isOpen(el.drawer)) restoreFocus(token);
   }
 
   function showNotice(message) {
@@ -162,56 +174,66 @@
     el.notice.textContent = "";
   }
 
-  /* ── drawer ──────────────────────────────────────────────── */
+  /* ── the two panels ──────────────────────────────────────
+     The cart drawer and the menu are the same object opening from
+     opposite edges, over one backdrop. Only ever one at a time. --- */
 
   var lastFocused = null;
-  var closeTimer = null;
+  var closeTimers = new WeakMap();
+  var openPanel = null;
 
-  function isOpen() {
-    return !el.drawer.hidden;
+  function isOpen(panel) {
+    return !!panel && !panel.hidden;
   }
 
-  function focusableInDrawer() {
+  function focusableIn(panel) {
     return Array.prototype.filter.call(
-      el.drawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+      panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
       function (node) { return !node.disabled && node.getClientRects().length > 0; }
     );
   }
 
-  function openDrawer() {
-    if (isOpen()) return;
-    window.clearTimeout(closeTimer);
-    lastFocused = document.activeElement;
+  function openPanelEl(panel, focusFirst) {
+    if (isOpen(panel)) return;
+    if (openPanel && openPanel !== panel) closePanel(openPanel);
 
-    el.drawer.hidden = false;
+    window.clearTimeout(closeTimers.get(panel));
+    lastFocused = document.activeElement;
+    openPanel = panel;
+
+    panel.hidden = false;
     el.backdrop.hidden = false;
     document.body.classList.add("is-locked");
 
     // force a reflow so the transform transition actually runs
-    void el.drawer.offsetWidth;
-    el.drawer.classList.add("is-open");
+    void panel.offsetWidth;
+    panel.classList.add("is-open");
     el.backdrop.classList.add("is-open");
 
-    el.close.focus();
+    if (focusFirst && typeof focusFirst.focus === "function") focusFirst.focus();
+    if (el.menuOpen && panel === el.menu) el.menuOpen.setAttribute("aria-expanded", "true");
   }
 
-  function closeDrawer() {
-    if (!isOpen()) return;
+  function closePanel(panel) {
+    if (!isOpen(panel)) return;
 
-    el.drawer.classList.remove("is-open");
+    panel.classList.remove("is-open");
     el.backdrop.classList.remove("is-open");
     document.body.classList.remove("is-locked");
+    if (openPanel === panel) openPanel = null;
 
-    closeTimer = window.setTimeout(function () {
-      el.drawer.hidden = true;
-      el.backdrop.hidden = true;
-    }, reduceMotion.matches ? 0 : 380);
+    closeTimers.set(panel, window.setTimeout(function () {
+      panel.hidden = true;
+      if (!openPanel) el.backdrop.hidden = true;
+    }, reduceMotion.matches ? 0 : 360));
 
+    if (el.menuOpen && panel === el.menu) el.menuOpen.setAttribute("aria-expanded", "false");
     if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
   }
 
   function trapTab(event) {
-    var nodes = focusableInDrawer();
+    if (!openPanel) return;
+    var nodes = focusableIn(openPanel);
     if (nodes.length === 0) return;
 
     var first = nodes[0];
@@ -226,14 +248,14 @@
     }
   }
 
-  /* ── wiring ──────────────────────────────────────────────── */
+  function openDrawer() { openPanelEl(el.drawer, el.close); }
+  function closeDrawer() { closePanel(el.drawer); }
 
-  if (el.year) el.year.textContent = String(new Date().getFullYear());
-
-  /* The edition line, from config.js. With no number set it stays as
-     written in the markup — "An edition of 500 — numbered by hand" —
-     which is honest as long as the run is actually capped at the total.
-     Set product.edition.number once real inventory exists (the Stripe
+  /* ── the edition line ────────────────────────────────────
+     From config.js. With no number set it stays as written in the
+     markup — "An edition of 500 — numbered by hand" — which is honest
+     as long as the run is actually capped at the total. Set
+     product.edition.number once real inventory exists (the Stripe
      dashboard is the source of truth) and this upgrades it on its own.
      Never wired to anything that counts up by itself: a figure nobody
      placed there on purpose is fabricated scarcity, not a feature. */
@@ -301,12 +323,10 @@
     return true;
   }
 
-  /* Purchase opens the drawer; the drawer's Checkout is what leaves for
-     Stripe. The step in between is where "What's in the box" gets read,
-     which is the last thing anyone wants to know before paying. Two
-     controls lead here — the bottle section's form and the closing
-     band's plain button — so the behaviour lives in one place and both
-     just call it. */
+  /* The tile's + and the closing band's Purchase both land here: add
+     one, open the drawer. The drawer's Checkout is what leaves for
+     Stripe — the step in between is where "What's in the box" gets
+     read, which is the last thing anyone wants to know before paying. */
   function purchase() {
     hideNotice();
     addToCart(1);
@@ -314,14 +334,11 @@
     if (window.VATES_TRACK) window.VATES_TRACK.track("add");
   }
 
-  el.form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    purchase();
-  });
-
   Array.prototype.forEach.call(document.querySelectorAll("[data-purchase]"), function (btn) {
     btn.addEventListener("click", purchase);
   });
+
+  if (el.open) el.open.addEventListener("click", function () { openDrawer(); });
 
   // drawer line-item controls
   el.items.addEventListener("click", function (event) {
@@ -355,188 +372,179 @@
   });
 
   el.close.addEventListener("click", closeDrawer);
-  el.backdrop.addEventListener("click", closeDrawer);
+  el.backdrop.addEventListener("click", function () { closePanel(openPanel); });
+
+  if (el.menuOpen && el.menu) {
+    el.menuOpen.addEventListener("click", function () {
+      openPanelEl(el.menu, el.menuClose);
+    });
+    el.menuClose.addEventListener("click", function () { closePanel(el.menu); });
+    /* Every link in the menu goes somewhere on this page or the next —
+       either way the panel has done its job. */
+    el.menu.addEventListener("click", function (event) {
+      if (event.target.closest("a")) closePanel(el.menu);
+    });
+  }
 
   document.addEventListener("keydown", function (event) {
-    if (!isOpen()) return;
+    if (!openPanel) return;
     if (event.key === "Escape") {
       event.preventDefault();
-      closeDrawer();
+      closePanel(openPanel);
     } else if (event.key === "Tab") {
       trapTab(event);
     }
   });
 
-  /* The waitlist has nowhere to send an address yet. A static site can't
-     collect one on its own — this wants a real endpoint (a form service,
-     or a small serverless function) before it goes live, and once it has
-     one, collecting emails belongs in the privacy page too. Until then
-     the form says so rather than pretending to have sent anything. */
-  var waitlist = document.getElementById("waitlist");
-  if (waitlist) {
-    waitlist.addEventListener("submit", function (event) {
-      event.preventDefault();
-      var note = document.getElementById("waitlist-note");
-      if (!note) return;
-      note.textContent = "The waitlist isn't connected yet — nothing was sent.";
-      note.hidden = false;
-    });
-  }
-
   render();
 
-  /* ── The iris ────────────────────────────────────────────────
-     The seer's eye behind the opening: band-coloured rings breathing
-     out of step around a dark pupil, fine spokes slowly wheeling.
-     Runs only while the hero is on screen and the tab is visible;
-     reduced motion gets one still frame. --------------------------- */
+  /* ── The announcement bar ────────────────────────────────
+     Cross-fades between the standing lines, and stops advancing on
+     its own the moment someone uses the arrows — an auto-rotating
+     line that moves while it is being read is worse than none. ---- */
 
-  var canvas = document.getElementById("iris");
+  (function () {
+    var bar = document.getElementById("announce");
+    if (!bar) return;
 
-  if (canvas && canvas.getContext) {
-    var ctx = canvas.getContext("2d");
-    var DPR = Math.min(window.devicePixelRatio || 1, 2);
-    var BANDS = ["#76b856", "#f2ba4b", "#e3873d", "#cf4743", "#8b4192", "#4698d3"];
-    var PAPER = "244, 238, 227";
-    var GROUND = "30, 24, 15";
-    var SPOKES = 96;
+    var items = bar.querySelectorAll(".announce__item");
+    if (items.length < 2) return;
 
-    var W = 0, H = 0;
-    var t = 0, raf = 0, lastFrame = 0, running = false, heroVisible = true;
-    var rings = [];
+    var at = 0;
+    var timer = null;
+    var auto = !reduceMotion.matches;
 
-    /* How far the opening has been scrolled through: 0 at rest, 1 once the
-       hero is a screen behind. The iris opens outwards across that travel
-       and dissolves as it goes, so scrolling reads as the eye widening
-       rather than as a picture sliding away. Passive, and the value is
-       only read inside a frame that is already being drawn — nothing here
-       schedules work of its own. Reduced motion never reaches it: the
-       canvas paints one still frame and the loop does not run. */
-    var scrollP = 0;
-    var readScroll = function () {
-      var span = Math.max(window.innerHeight * 0.9, 1);
-      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-      scrollP = Math.min(1, Math.max(0, y / span));
-    };
-    window.addEventListener("scroll", readScroll, { passive: true });
-    readScroll();
-
-    var seed = function () {
-      rings = [];
-      for (var i = 0; i < 16; i++) {
-        rings.push({
-          f: 0.36 + 0.64 * (i / 15),
-          color: BANDS[i % 6],
-          a: 0.10 + Math.random() * 0.16,
-          wob: 1.5 + Math.random() * 3,
-          sp: 0.2 + Math.random() * 0.4,
-          ph: Math.random() * Math.PI * 2
-        });
-      }
-    };
-
-    var draw = function () {
-      ctx.clearRect(0, 0, W, H);
-      var cx = W / 2, cy = H * 0.52;
-
-      /* Eased, so the opening is unhurried at the top of the travel and
-         accelerates away — a linear ramp reads as the canvas being
-         dragged, this reads as an aperture. */
-      var p = scrollP * scrollP * (3 - 2 * scrollP);
-      var open = 1 + p * 1.45;          /* how far the rings have widened */
-      var fade = 1 - p * 0.88;          /* and how much is left of them */
-
-      var R = Math.min(W * 0.46, H * 0.44) * (1 + 0.02 * Math.sin(t * 0.5)) * open;
-      var i;
-
-      /* the glow behind everything */
-      var glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.6);
-      glow.addColorStop(0, "rgba(227, 135, 61, " + (0.16 * fade).toFixed(4) + ")");
-      glow.addColorStop(1, "rgba(227, 135, 61, 0)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(cx - R * 1.7, cy - R * 1.7, R * 3.4, R * 3.4);
-
-      /* fine spokes, slowly wheeling */
-      ctx.strokeStyle = "rgba(" + PAPER + ", " + (0.07 * fade).toFixed(4) + ")";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (i = 0; i < SPOKES; i++) {
-        var an = (i / SPOKES) * Math.PI * 2 + t * 0.05;
-        var r0 = R * 0.4, r1 = R * (0.96 + 0.03 * Math.sin(t * 0.7 + i));
-        ctx.moveTo(cx + Math.cos(an) * r0, cy + Math.sin(an) * r0);
-        ctx.lineTo(cx + Math.cos(an) * r1, cy + Math.sin(an) * r1);
-      }
-      ctx.stroke();
-
-      /* the rings, band-coloured, breathing out of step */
-      for (i = 0; i < rings.length; i++) {
-        var g = rings[i];
-        var rr = R * g.f + Math.sin(t * g.sp + g.ph) * g.wob;
-        ctx.beginPath();
-        ctx.arc(cx, cy, Math.max(1, rr), 0, Math.PI * 2);
-        ctx.strokeStyle = g.color;
-        ctx.globalAlpha = g.a * (0.8 + 0.2 * Math.sin(t * g.sp * 1.3 + g.ph)) * fade;
-        ctx.lineWidth = 1 + (i % 3) * 0.7;
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-
-      /* The pupil opens with the rings. It is painted in the page's own
-         ground, so it has to fade too — left solid it would sit over the
-         section below as a dark disc once the rings had gone. */
-      var pu = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.36);
-      pu.addColorStop(0, "rgba(" + GROUND + ", " + fade.toFixed(4) + ")");
-      pu.addColorStop(0.85, "rgba(" + GROUND + ", " + fade.toFixed(4) + ")");
-      pu.addColorStop(1, "rgba(" + GROUND + ", 0)");
-      ctx.fillStyle = pu;
-      ctx.beginPath(); ctx.arc(cx, cy, R * 0.36, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "rgba(" + PAPER + ", " + (0.9 * fade).toFixed(4) + ")";
-      ctx.beginPath(); ctx.arc(cx - R * 0.09, cy - R * 0.11, 2.4, 0, Math.PI * 2); ctx.fill();
-    };
-
-    var resize = function () {
-      W = canvas.clientWidth; H = canvas.clientHeight;
-      if (!W || !H) return;
-      canvas.width = W * DPR; canvas.height = H * DPR;
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      seed();
-      if (reduceMotion.matches) { t = 1; draw(); }
-    };
-
-    var loop = function (now) {
-      if (!running) return;
-      var dt = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0.016;
-      lastFrame = now;
-      t += dt;
-      draw();
-      raf = window.requestAnimationFrame(loop);
-    };
-
-    var setRunning = function (on) {
-      on = on && !reduceMotion.matches && heroVisible && !document.hidden;
-      if (on === running) return;
-      running = on;
-      if (running) { lastFrame = 0; raf = window.requestAnimationFrame(loop); }
-      else window.cancelAnimationFrame(raf);
-    };
-
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        heroVisible = entries[0].isIntersecting;
-        setRunning(true);
-      }, { threshold: 0.05 }).observe(canvas);
-    }
-    document.addEventListener("visibilitychange", function () { setRunning(true); });
-    window.addEventListener("resize", resize);
-    if (reduceMotion.addEventListener) {
-      reduceMotion.addEventListener("change", function () { resize(); setRunning(true); });
+    function show(next) {
+      at = (next + items.length) % items.length;
+      Array.prototype.forEach.call(items, function (item, i) {
+        item.classList.toggle("is-current", i === at);
+      });
     }
 
-    resize();
-    setRunning(true);
-  }
+    function tick() {
+      window.clearTimeout(timer);
+      if (!auto || document.hidden) return;
+      timer = window.setTimeout(function () { show(at + 1); tick(); }, 5200);
+    }
 
-  /* ── The film, then the creators ─────────────────────────────
+    function step(by) {
+      auto = false;                       // hands off once a hand is on it
+      window.clearTimeout(timer);
+      show(at + by);
+    }
+
+    document.getElementById("announce-prev").addEventListener("click", function () { step(-1); });
+    document.getElementById("announce-next").addEventListener("click", function () { step(1); });
+    document.addEventListener("visibilitychange", tick);
+    tick();
+  })();
+
+  /* ── The collection tabs ─────────────────────────────────
+     One grid, filtered by each tile's data-collection list. The count
+     under the tabs is read off what is actually showing, so it cannot
+     drift from the grid, and the rule's thumb slides to the tab that
+     is open. Anything with data-tab elsewhere on the page (the rail,
+     the menu) selects a collection too. ------------------------- */
+
+  (function () {
+    var tabs = document.querySelectorAll(".tabs__btn");
+    var grid = document.getElementById("grid");
+    if (!tabs.length || !grid) return;
+
+    var cards = grid.querySelectorAll(".card");
+    var count = document.getElementById("shop-count");
+    var thumb = document.getElementById("tabs-thumb");
+    var track = thumb && thumb.parentNode;
+
+    if (track) track.style.setProperty("--n", tabs.length);
+
+    function select(name) {
+      var index = 0;
+      var shown = 0;
+
+      Array.prototype.forEach.call(tabs, function (tab, i) {
+        var isIt = tab.dataset.collection === name;
+        tab.setAttribute("aria-selected", isIt ? "true" : "false");
+        if (isIt) {
+          index = i;
+          grid.setAttribute("aria-labelledby", tab.id);
+        }
+      });
+
+      Array.prototype.forEach.call(cards, function (card) {
+        var list = (card.dataset.collection || "").split(/\s+/);
+        var showing = list.indexOf(name) > -1;
+        card.hidden = !showing;
+        if (showing) shown += 1;
+      });
+
+      if (count) count.textContent = shown + (shown === 1 ? " Product" : " Products");
+      if (track) track.style.setProperty("--i", index);
+    }
+
+    Array.prototype.forEach.call(tabs, function (tab) {
+      tab.addEventListener("click", function () { select(tab.dataset.collection); });
+    });
+
+    /* The rail and the menu name a collection with data-tab; they also
+       carry an href to #shop, so the browser does the scrolling. */
+    Array.prototype.forEach.call(document.querySelectorAll("[data-tab]"), function (link) {
+      link.addEventListener("click", function () { select(link.dataset.tab); });
+    });
+
+    select("best");
+  })();
+
+  /* ── The signup band ─────────────────────────────────────
+     Email or SMS, and neither has anywhere to send an address yet. A
+     static site can't collect one on its own — this wants a real
+     endpoint (a form service, or a small serverless function) before
+     it goes live, and once it has one, collecting addresses belongs in
+     the privacy page too. Until then the form says so rather than
+     pretending to have sent anything. --------------------------- */
+
+  (function () {
+    var form = document.getElementById("waitlist");
+    if (!form) return;
+
+    var input = document.getElementById("waitlist-email");
+    var label = document.getElementById("waitlist-label");
+    var note = document.getElementById("waitlist-note");
+    var modes = {
+      email: document.getElementById("mode-email"),
+      sms: document.getElementById("mode-sms")
+    };
+
+    function setMode(which) {
+      Object.keys(modes).forEach(function (key) {
+        if (modes[key]) modes[key].setAttribute("aria-pressed", key === which ? "true" : "false");
+      });
+      if (which === "sms") {
+        input.type = "tel";
+        input.autocomplete = "tel";
+        input.placeholder = "Enter Your Number.";
+        if (label) label.textContent = "Your phone number";
+      } else {
+        input.type = "email";
+        input.autocomplete = "email";
+        input.placeholder = "Enter Your Email.";
+        if (label) label.textContent = "Your email address";
+      }
+      if (note) note.hidden = true;
+    }
+
+    if (modes.email) modes.email.addEventListener("click", function () { setMode("email"); });
+    if (modes.sms) modes.sms.addEventListener("click", function () { setMode("sms"); });
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!note) return;
+      note.textContent = "The list isn't connected yet — nothing was sent.";
+      note.hidden = false;
+    });
+  })();
+
+  /* ── The film, then the reel ─────────────────────────────
      The archive reel lives inside the film's own frame and takes
      over the moment the film ends. The pictures are named in the
      markup: data-frame-src is the path with {n} standing in for a
@@ -585,8 +593,8 @@
       var at = quoteTurns[key] || 0;
       quoteTurns[key] = (at + 1) % list.length;
       var entry = list[at];
-      quoteBox.querySelector(".about__quote").textContent = entry.q || "";
-      quoteBox.querySelector(".about__quote-by").textContent = entry.who || "";
+      quoteBox.querySelector(".story__quote").textContent = entry.q || "";
+      quoteBox.querySelector(".story__quote-by").textContent = entry.who || "";
       quoteBox.hidden = false;
     };
 

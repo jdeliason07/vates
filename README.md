@@ -23,18 +23,19 @@ shipping.html privacy.html terms.html    the three Stripe asks for
 assets/js/config.js            THE ONLY FILE TO EDIT TO GO LIVE
 assets/js/track.js             attribution and the ad pixels
 assets/fonts/inter-*.woff2     Inter, self-hosted, three weights
-assets/fonts/fraunces-*.woff2  Fraunces, self-hosted — the manifesto voice, one variable file
+assets/fonts/fraunces-*.woff2  Fraunces, self-hosted — the display voice, one variable file
 assets/img/og.jpg              the 1200x630 share card
 assets/brand/loom-colors.css   the brand color system — imported first, unmodified
 assets/css/styles.css          storefront styles
-assets/js/app.js               the iris, order drawer, cart state, film-to-reel handover
+assets/js/app.js               the shop UI, order drawer, cart state, film-to-reel handover
 assets/js/leaderboard.js       draws the leaderboard from /api/leaderboard
 api/leaderboard.mjs            that endpoint — the one server-side file, holds the Stripe key
 assets/brand/vates-*.svg       the wordmark, and the "v" cropped square for the favicon
-assets/img/reel/01–32.webp     the archive reel of creators, in Who we are
-assets/video/intro.mp4/.webm   the film, framed in Who we are — plays on a tap
+assets/img/reel/01–32.webp     the archive reel of creators, in Our story
+assets/video/intro.mp4/.webm   the film, framed in Our story — plays on a tap
 assets/img/hero-poster.jpg     its poster frame
-assets/img/no-01.webp/.jpg     the No. 01 photograph — the pair, on a desk in use
+assets/img/no-01.webp/.jpg     the hero photograph — the pair, on a desk in use
+assets/img/no-01-thumb.webp    the bottle on its own, cut out — the product tiles
 ```
 
 ## Deployment
@@ -49,79 +50,94 @@ is nothing to build and no output directory to point at. If Vercel's project
 settings ask for a framework preset, it's "Other"; leave the build command
 empty and the output directory as the root.
 
+## The design
+
+The storefront is a black shop page in the modern direct-to-consumer idiom —
+the shape of a Shopify-era product page, built out of this brand's own parts.
+The reference was a phone: an announcement bar rotating one promise at a time,
+a sticky masthead with a cart pill, a rail of round category thumbs, a
+full-bleed hero, serif collection tabs over a grid of square product tiles with
+a badge in one corner and a round **+** in the other, a carousel of white cards,
+a signup band with an Email/SMS toggle, a four-column footer, and the wordmark
+set enormous and cropped by the bottom of the page.
+
+Everything is drawn in black, white and the wordmark's six bands. The colour on
+this site comes from the mark and from the photographs; there is no second
+palette.
+
 ## Page order
 
-1. **The opening** — the wordmark at masthead scale over the iris (below), a
-   ticker chanting the definition — visionaries, seers, revelators — and the
-   tagline and promise at the bottom of the same screen.
-2. **Who we are** — the manifesto, centred, with the film framed under it.
-   When the film ends, the archive reel of creators takes over its frame.
-3. **The bridge** — "Vision needs a vessel", the handoff from why to what.
-4. **The bottle** — photograph, claim, the offer, and the edition line (below).
-5. **The Vates Standard** — the four rules, numbered.
-6. **Vates Creators** — a three-by-five grid of slots (below).
-7. **In hand** — the specs. Height and weight are dashes until the spec sheet
+1. **The announcement bar** — three standing promises, one at a time.
+2. **The masthead** — hamburger, wordmark, two icons, the cart pill. Sticky.
+3. **The rail** — six round thumbs that scroll sideways: the collections and
+   the sections below.
+4. **The hero** — the photograph full-bleed, the tagline and promise over it.
+5. **The shop** — three collection tabs over one grid: Best sellers, Bottles,
+   The kit. The count under the tabs is read off what is actually showing.
+6. **Our story** — the letter from the founders, with the film framed beside
+   it. When the film ends, the archive reel takes over its frame.
+7. **The Vates Standard** — the four rules, numbered.
+8. **In hand** — the specs. Height and weight are dashes until the spec sheet
    fills them.
-8. **The closing ask** — a last full-width Purchase, then the waitlist for
-   anyone not ready yet.
-9. **Footer.**
+9. **The carousel** — sourced lines, on white cards.
+10. **The closing ask**, **the signup band**, **the footer**, and the wordmark
+    across the bottom.
 
-`leaderboard.html` sits outside that order, as a plain page.
+`leaderboard.html` and the legal pages sit outside that order. They wear the
+same masthead and footer with the moving parts left out: no cart to open and no
+menu to trap focus in, so the wordmark and a Shop pill do the whole job, and
+none of them loads `app.js`.
 
-### The rhythm, and the dividers
+### What the idiom asks for, and what is not faked
 
-Every band carries the same padding above and below (`--section-y`). They used
-to have a top and no bottom, which read fine while sections ran together; once
-the band filaments divided them, an asymmetric section put the line hard
-against the content above it. Equal on both sides, a divider always lands
-centred.
+Copying a shop page this closely means arriving at slots that this brand cannot
+honestly fill. Each one is answered rather than filled:
 
-The filaments fall at five seams: after the opening, after the film, after the
-bottle, after the Standard, and after the creators. Two seams have none on
-purpose — the bridge leans into the bottle it introduces (half rhythm below
-it, so the two read as one movement), and the closing ask carries its own rule
-and darker ground instead.
+- **Reviews.** The carousel sits exactly where a shop of this shape puts
+  "Real people. Real results." with five stars and a verified-buyer badge. No.
+  01 has not shipped to anyone, so there is nothing to quote. The cards carry
+  sourced lines from the archive instead, with the source printed on each, and
+  the line underneath says plainly that they are not customer reviews. Swap
+  them for real, verified ones the day there are some — the card markup takes a
+  name, a date and a quote already.
+- **Search and account.** A one-product shop has nothing to search and no
+  account to sign into. The two masthead icons go to the leaderboard and to
+  "Reaching us" on the shipping page.
+- **Live chat.** The floating bubble is where a chat widget goes. There is no
+  chat here, so it links to the page that says how to reach us.
+- **The kit tiles.** No photographs of the notepad, the pen, the Page of
+  Inspiration or the letter exist yet. Their tiles carry the wordmark on a
+  band-tinted ground — plainly a placeholder — and none of them has a price or
+  an add button, because none of them is sold on its own.
+- **The signup band.** Email and SMS both switch the field, and neither has
+  anywhere to send an address. It says so on submit rather than pretending.
 
-The page scrolls normally. The scroll-snap paging and the wheel driver that
-earlier versions carried are gone with the full-screen reel they served; the
-scroll choreography left is the cue at the foot of the opening and the iris
-opening with the scroll.
+### The rhythm
 
-### Vates Creators
+Every band carries the same padding above and below (`--section-y`), so a
+divider always lands centred. One band filament — the six colours as a
+hairline — falls between the shop and the story; the rest of the seams are
+carried by the ground stepping from black to `--ground-2` and back.
 
-The grid holds fifteen slots, and every one of them is **unnamed** — a dash
-where the name goes. It shipped once with invented creators, which is an
-endorsement nobody gave, and came out again. Empty slots hold the layout
-without claiming anything untrue. Replace a silhouette and its dash together,
-or leave the card out; a face with no name, or a name with no face, is worse
-than an empty square.
+### The collection tabs
 
-## The opening
+One grid, filtered by each tile's `data-collection` list. The count is derived
+from what is left showing, so it cannot drift from the grid, and the rule's
+thumb slides to the open tab (`--i` and `--n` on `.tabs__track`). Anything else
+on the page can select a collection by carrying `data-tab` — the rail and the
+menu both do, alongside an `href` to `#shop` so the browser does the scrolling.
 
-The iris — the seer's eye — is drawn on a `<canvas>` by `app.js`: sixteen rings
-in the wordmark's six band colours breathing out of step around a dark pupil,
-with fine spokes wheeling slowly. It runs only while the hero is on screen and
-the tab is visible, and under `prefers-reduced-motion` it draws one still frame
-and stops. The ticker is pure CSS; its squares are the six bands.
+### The two panels
 
-It **opens with the scroll**: across the first screen of travel the rings widen
-outward and dissolve, so scrolling reads as an aperture opening rather than a
-picture sliding away. The travel is eased rather than linear — a straight ramp
-reads as the canvas being dragged. The pupil fades with the rings, because it
-is painted in the page's own ground and would otherwise sit over the section
-below as a dark disc. The scroll listener is passive and only sets a number;
-it is read inside a frame that was already being drawn, so it schedules no
-work of its own, and reduced motion never reaches it.
-
-Two voices share the page: Fraunces (self-hosted, one latin variable file)
-speaks the statement lines — the tagline, the manifesto headline — and the
-grotesque keeps the product and the UI. The wordmark remains artwork and is
-never re-set in type.
+The cart drawer and the menu are the same object opening from opposite edges,
+over one backdrop, and only one is ever open: opening either closes the other.
+Both trap Tab, both close on Escape and on the backdrop, and both hand focus
+back to whatever opened them.
 
 ## The film and the reel
 
-The film is back, framed inside **Who we are** rather than in front of the
-site: it plays on a tap, with its poster showing until then. The moment it
+The film is framed inside **Our story** rather than in front of the site: it
+plays on a tap, with its poster showing until then. The moment it
 ends, the archive reel — the same 32 stills, `assets/img/reel/01–32.webp` —
 takes over the film's own frame and loops, cutting every 2.6 seconds. Replaying
 the film puts it back on top; the reel returns at the next `ended`. The reel is
@@ -131,7 +147,7 @@ and it holds its picture when the tab is hidden or the section is off screen.
 ## The quotes
 
 Thirteen of the reel's pictures carry something the person in them said,
-shown under the frame in Who we are as each picture comes round. The
+shown under the frame in Our story as each picture comes round. The
 quotes are declared in `index.html`, in the `#reel-captions` JSON block, for the
 same reason the pictures are named there: changing a quote, or moving one from
 one frame to another, is an edit to the markup and not to `app.js`. The key is
@@ -159,39 +175,47 @@ have no entry and show none; the wash goes with them, so there is no shadow
 across the bottom of a picture with nothing to read on it.
 
 The quote and the picture turn together — `say()` is called from the same
-`then()` that swaps the slots, so a line is never left under the wrong face. The
-two caption slots hand over differently from the pictures: a picture covers the
-one it replaces and text does not, so the outgoing line is cleared first (200ms)
-and the incoming one held back until it has gone (460ms after a 200ms delay).
-Both fit inside the 1500ms a picture holds.
+`then()` that swaps the slots, so a line is never left under the wrong face.
 
-The reel's backdrop is `aria-hidden`, and the quotes are inside it. That is
-deliberate: a line replaced every second and a half is decoration, and
-announcing each one would make the page unusable with a screen reader.
+The reel's frame is `aria-hidden`, and the quote box is written to from inside
+the same turn. That is deliberate: a line replaced every couple of seconds is
+decoration, and announcing each one would make the page unusable with a screen
+reader.
+
+The five white cards in the carousel are a separate, hand-written list in
+`index.html`. They are not drawn from `#reel-captions` — the carousel is read
+at a glance and the reel is watched, so they were chosen for that, and each
+card prints its own source.
 
 ## Replacing the imagery
 
 **Reel** — drop numbered files at `assets/img/reel/01.webp` … `32.webp`. The
-count and the path are declared in `index.html` on `#reel` (`data-frame-count`
-and `data-frame-src`, where `{n}` stands in for the two-digit number), so
-changing how many pictures the reel holds is a one-attribute edit, not a code
-change. Add the new frame's quote to `#reel-captions` under the same number, or
-leave it out and the frame runs without one. `FRAME_MS` in `app.js` is how long
-each one holds — 1500ms, or 4s under `prefers-reduced-motion`, where the cuts
-would otherwise be the motion — and `--reel-fade` on `.reel` is the dissolve
-between them, which wants to stay well inside `FRAME_MS`.
+count and the path are declared in `index.html` on `#about-reel`
+(`data-frame-count` and `data-frame-src`, where `{n}` stands in for the
+two-digit number), so changing how many pictures the reel holds is a
+one-attribute edit, not a code change. Add the new frame's quote to
+`#reel-captions` under the same number, or leave it out and the frame runs
+without one. `HOLD` in `app.js` is how long each one stays — 2.6 seconds — and
+the dissolve between them is the transition on `.story__reel img`, which wants
+to stay well inside it. Six of the same stills are the rail's round thumbs, by
+name in `index.html`.
 
-Frame `01` is preloaded by name in the head; renumbering the reel means
-changing that line too.
+**Hero photograph** — `no-01.webp`, cropped by `object-fit: cover` and framed
+by `object-position` (a different value above 60rem, where the crop is much
+wider and the painting on the wall would otherwise be cut off). To replace it,
+swap `no-01.webp` and its `no-01.jpg` fallback and update the `width`/`height`
+attributes on the `<img>`.
 
-**Product photo** — `no-01.webp` with a `no-01.jpg` fallback, served full-bleed
-from `.product__stage`; the photograph's own ground becomes a plate against the
-dark page. To replace it, swap both files, update the `width`/`height`
-attributes on the `<img>` in `index.html` to the new pixel dimensions, and check
-`PRODUCT.image` in `assets/js/app.js`, which the drawer thumbnail uses. The
-stage is width-driven — the photo fills it and sets its own height — so any
-aspect ratio fits without markup changes; a much taller frame may want a smaller
-cap than the 560px on `.product__stage` and its grid track.
+**Product tiles** — `no-01-thumb.webp`, the bottle cut out of its background.
+The cut-out is what makes the tile: it is dark smoke glass on transparency, so
+on a flat near-black tile it all but disappears, and `.card__tile--stage` puts a
+lit stage behind it the way a bottle in a shop window gets a lamp. The image is
+absolutely positioned inside the tile rather than centred as a grid child — the
+tile's height comes from its `aspect-ratio`, which is indefinite to a grid
+child, so a percentage height on one is ignored and the 345×1222 bottle lays
+itself out at its natural height and is cropped to a band of empty glass. Swap
+the file, update the `width`/`height` attributes, and check `PRODUCT.image` in
+`assets/js/app.js`, which the drawer thumbnail uses.
 
 ## Brand rules encoded here
 
@@ -199,44 +223,38 @@ cap than the 560px on `.product__stage` and its grid track.
   kept verbatim. Components reference only the semantic aliases
   (`--color-bg`, `--color-text-primary`, …), never the raw `--loom-*` names.
 - The page ground is this site's own, not the brand's: `styles.css` re-points
-  `--color-bg` to #2e251b, a dark brown, under `[data-theme="dark"]`. The Void
-  is still the Void — the brand file is untouched — this page just does not sit
-  on it. The `theme-color` meta in `index.html` tracks the same value.
-
-  Only `--color-bg` moved. `--color-bg-elevated` is still Graphite, which is a
-  cool grey against a warm ground; it shows on the drawer, the notice and the
-  line-item thumbs. It reads as a neutral dark panel rather than a clash, but
-  a warmer elevated tone is the obvious next move if it starts to look wrong.
+  `--color-bg` to pure black under `[data-theme="dark"]`, and its own tokens
+  (`--ground`, `--panel`, `--ink`, …) carry the shop from there. The Void is
+  still the Void — the brand file is untouched — this page just does not sit on
+  it. The `theme-color` meta on every page, and `site.webmanifest`, track the
+  same value.
 - The wordmark is artwork, not type: `assets/brand/vates-wordmark.svg`, a
   traced outline filled with the six colour bands the logo is built from
   (#76b856, #f2ba4b, #e3873d, #cf4743, #8b4192, #4698d3). It is always
   lowercase, never tracked, stretched or italicized, and never recoloured.
-- The primary CTA carries those same six colours, one sixth of the button
-  each — the wordmark's own bands are uneven (green is 38% of it), which reads
-  as a mistake at button size. It is the only place the bands appear outside
-  the wordmark itself, and it is the palette being reused, not the artwork.
-  `--color-accent` is no longer on the button; it is left for focus and links.
-
-  The label is true black rather than `--color-bg`, and red is the band that
-  decides it. Equal bands put the type mid-ramp, across orange and red, where
-  the page ground is 3.97:1 — under the bar — and black is 4.64:1. Measured on
-  the rendered button rather than calculated: worst contrast under any row of
-  the glyphs is 4.64:1 against a 4.5:1 requirement, so the margin is thin.
-  Changing the padding, the type size or the band order moves the label onto
-  different bands; re-measure if you do.
-- One family for all type, `--font`: Helvetica where it is installed, Inter
-  served as the fallback everywhere else, then Arial. The only tracked
-  treatment left is `.label`, uppercase at 0.18em.
-- Corner radii come from `--radius-sm/md/lg` in `styles.css`; nothing is
-  square.
+- The primary control is white on black — the cart pill, the tile's round
+  **+**, Purchase and Checkout are all the same object at four sizes. An
+  earlier version ran the six bands across the button; on a black ground the
+  white pill is what the idiom expects and what carries the most contrast, so
+  the bands moved to where they read as a signature rather than a control: the
+  filament between the shop and the story, the drawer's opening edge, the rule
+  under each carousel card, and the tier dots on the kit tiles.
+- Three voices. Inter carries the product and UI copy; Fraunces (one
+  self-hosted latin variable file) speaks the display lines — the collection
+  tabs, the section titles, the statement lines; and the system monospace
+  carries the small labels the idiom sets in mono: "2 Products", the tier
+  under each tile, the footer column heads, the legal row. `.label` is that
+  mono voice, and it is no longer uppercase or tracked.
+- Corner radii come from `--radius-sm/md/pill` in `styles.css`. The tiles and
+  inputs are gently rounded; anything that behaves like a button is a pill.
 
 Dark is the shipped theme, and `<html>` carries `data-theme="dark"` outright.
 `loom-colors.css` carries a `[data-theme="light"]` block, but no toggle is wired
 up: the wordmark's gradient is tuned for a dark ground and loses contrast on
 light. The ground override is scoped to `[data-theme="dark"]` so that block is
-left intact if a toggle is ever added. If a toggle is added later, the
-primary button's ink (`color: var(--color-bg)`) needs an explicit dark override,
-since the bands are the same in both themes.
+left intact if a toggle is ever added. A toggle would also want the shop's own
+tokens redefined — they are declared once on `:root` and assume a black ground
+throughout.
 
 ## Going live
 
@@ -275,15 +293,20 @@ up on its own: a figure nobody put there on purpose is fabricated scarcity,
 and both the FTC and the CMA treat a live-ticking claim of demand as a
 deceptive practice, not a growth hack.
 
-**5. The waitlist.** The form at the foot of the page has nowhere to send an
-address yet — `app.js` shows "The waitlist isn't connected yet" and stops
-there. Point its `submit` handler at a real endpoint (a form service such as
-Formspree or Buttondown, or a small serverless function) before this ships,
-and once it collects an email address, say so on the privacy page.
+**5. The signup band.** The form at the foot of the page has nowhere to send an
+address yet — `app.js` shows "The list isn't connected yet" and stops there.
+The Email/SMS toggle switches the field's `type`, `autocomplete`, placeholder
+and label, and nothing else. Point the `submit` handler at a real endpoint (a
+form service such as Formspree or Buttondown, or a small serverless function)
+before this ships, and once it collects an address — an email address or a
+phone number — say so on the privacy page. SMS marketing also has consent
+rules of its own (TCPA in the US); leave that button out rather than collecting
+numbers you cannot lawfully text.
 
 ## The checkout
 
-Two taps: Purchase opens the drawer, the drawer's Checkout leaves for Stripe.
+Two taps: a tile's **+** (or the closing band's Purchase) opens the drawer, and
+the drawer's Checkout leaves for Stripe.
 The step in between is not friction for its own sake — it is where "What's in
 the box" gets read, which is the last thing anyone wants to know before paying.
 From Stripe the buyer lands back on `thanks.html` and is done.
