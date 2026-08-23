@@ -34,7 +34,8 @@ assets/brand/vates-*.svg       the wordmark, and the "v" cropped square for the 
 assets/img/reel/01–32.webp     the archive reel of creators, in Our story
 assets/video/intro.mp4/.webm   the film, framed in Our story — plays on a tap
 assets/img/hero-poster.jpg     its poster frame
-assets/img/no-01.webp/.jpg     the hero photograph — the pair, on a desk in use
+assets/img/no-01-desk.webp/.jpg  the hero photograph — No. 01 on a desk in window light
+assets/img/no-01.webp/.jpg     the pair on a workbench — the In hand rail thumb
 assets/img/no-01-thumb.webp    the bottle on its own, cut out — the product tiles
 ```
 
@@ -61,9 +62,11 @@ a badge in one corner and a round **+** in the other, a carousel of white cards,
 a signup band with an Email/SMS toggle, a four-column footer, and the wordmark
 set enormous and cropped by the bottom of the page.
 
-Everything is drawn in black, white and the wordmark's six bands. The colour on
-this site comes from the mark and from the photographs; there is no second
-palette.
+Everything is drawn in black and white. The wordmark is white — the six bands
+it used to be filled with are kept only as accents, and they are the one place
+colour appears outside the photographs: the filament between the shop and the
+story, the drawer's opening edge, the rule on each carousel card, and the tier
+dots on the kit tiles. There is no second palette.
 
 ## Page order
 
@@ -200,11 +203,14 @@ the dissolve between them is the transition on `.story__reel img`, which wants
 to stay well inside it. Six of the same stills are the rail's round thumbs, by
 name in `index.html`.
 
-**Hero photograph** — `no-01.webp`, cropped by `object-fit: cover` and framed
-by `object-position` (a different value above 60rem, where the crop is much
-wider and the painting on the wall would otherwise be cut off). To replace it,
-swap `no-01.webp` and its `no-01.jpg` fallback and update the `width`/`height`
-attributes on the `<img>`.
+**Hero photograph** — `no-01-desk.webp`, cropped by `object-fit: cover` and
+framed by `object-position`. The picture is nearly square (1179×1086) and the
+hero band is much wider than it is tall, so the crop is doing real work and is
+set twice: centred on the phone, and at `50% 42%` above 60rem, where the band
+is wide enough that anything else loses either the cap or the engraved base.
+Any replacement wants both values checked. Swap `no-01-desk.webp` and its
+`no-01-desk.jpg` fallback and update the `width`/`height` attributes on the
+`<img>`.
 
 **Product tiles** — `no-01-thumb.webp`, the bottle cut out of its background.
 The cut-out is what makes the tile: it is dark smoke glass on transparency, so
@@ -229,9 +235,17 @@ the file, update the `width`/`height` attributes, and check `PRODUCT.image` in
   it. The `theme-color` meta on every page, and `site.webmanifest`, track the
   same value.
 - The wordmark is artwork, not type: `assets/brand/vates-wordmark.svg`, a
-  traced outline filled with the six colour bands the logo is built from
-  (#76b856, #f2ba4b, #e3873d, #cf4743, #8b4192, #4698d3). It is always
-  lowercase, never tracked, stretched or italicized, and never recoloured.
+  traced outline. It is always lowercase, and never tracked, stretched or
+  italicized.
+- It is filled flat white. The artwork was drawn filled with the six colour
+  bands the logo is built from (#76b856, #f2ba4b, #e3873d, #cf4743, #8b4192,
+  #4698d3); on this ground it is white, and the bands live on only as the
+  accents listed above. The bands are still the brand's colours — recolouring
+  the mark back is a one-attribute edit on the single `<path>` in each file.
+- `vates-mark.svg` — the "v" cropped square, which is the SVG favicon — is
+  white too, but through a `<style>` block rather than a `fill` attribute, so
+  a `prefers-color-scheme: light` rule can flip it to near-black. A flat white
+  mark would otherwise disappear into a light browser tab strip.
 - The primary control is white on black — the cart pill, the tile's round
   **+**, Purchase and Checkout are all the same object at four sizes. An
   earlier version ran the six bands across the button; on a black ground the

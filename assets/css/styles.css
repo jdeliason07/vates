@@ -453,7 +453,7 @@ a { color: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 60% 45%;
+  object-position: 50% 50%;
 }
 
 /* The photograph is bright on the right and busy on the left; the
@@ -1217,8 +1217,11 @@ a { color: inherit; }
   .masthead__mark img { height: 2.4rem; }
   .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-  .hero__media { height: clamp(28rem, 66vh, 44rem); }
-  .hero__media img { object-position: 55% 32%; }
+  /* The photograph is nearly square and the desktop band is very wide, so
+     the crop decides what survives: this one keeps the whole bottle on its
+     diagonal, cap to engraved base, with the pen and notebook at the right. */
+  .hero__media { height: clamp(26rem, 62vh, 38rem); }
+  .hero__media img { object-position: 50% 42%; }
 
   .story__inner { max-width: none; display: grid; grid-template-columns: 1fr 1.1fr; gap: 3.5rem; align-items: start; }
   .story__media { margin-top: 0; }

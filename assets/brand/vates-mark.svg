@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 0 184 184" role="img" aria-label="vates"><defs><linearGradient id="vates-bands" gradientUnits="userSpaceOnUse" x1="0" y1="1840" x2="0" y2="0"><stop offset="0.0000" stop-color="#76b856"/><stop offset="0.3777" stop-color="#76b856"/><stop offset="0.3777" stop-color="#f2ba4b"/><stop offset="0.4918" stop-color="#f2ba4b"/><stop offset="0.4918" stop-color="#e3873d"/><stop offset="0.6168" stop-color="#e3873d"/><stop offset="0.6168" stop-color="#cf4743"/><stop offset="0.7364" stop-color="#cf4743"/><stop offset="0.7364" stop-color="#8b4192"/><stop offset="0.8560" stop-color="#8b4192"/><stop offset="0.8560" stop-color="#4698d3"/><stop offset="1.0000" stop-color="#4698d3"/></linearGradient></defs><g transform="translate(0.000000,184.000000) scale(0.100000,-0.100000)">
-<path fill="url(#vates-bands)" d="M4320 1620 l0 -220 -185 0 -185 0 0 -125 0 -125 188 -2 187 -3 0
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 0 184 184" role="img" aria-label="vates"><style>path{fill:#ffffff}@media (prefers-color-scheme: light){path{fill:#111111}}</style><g transform="translate(0.000000,184.000000) scale(0.100000,-0.100000)">
+<path d="M4320 1620 l0 -220 -185 0 -185 0 0 -125 0 -125 188 -2 187 -3 0
 -445 c0 -497 0 -499 67 -575 66 -75 109 -85 363 -85 l215 0 0 125 0 125 -164
 0 c-140 0 -166 2 -177 17 -11 13 -15 97 -17 429 l-3 414 203 2 203 3 3 123 3
 122 -206 0 -205 0 0 220 0 220 -145 0 -145 0 0 -220z M2485 1425 c-93 -15 -99
