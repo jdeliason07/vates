@@ -1180,19 +1180,11 @@ a { color: inherit; }
    browser opens on its own. No script — the disclosure is native, so
    it works with app.js absent, which is how every plain page loads.
    The questions carry their own ids so a link can point at one; the
-   page script opens whichever id is in the URL. ------------------ */
+   page script opens whichever id is in the URL. They run unheaded, in
+   one list — there are few enough that grouping them cost more than it
+   bought. ---------------------------------------------------------- */
 
 .faq { margin-top: 2.5rem; border-top: 1px solid var(--line); }
-
-.faq__group {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  padding: 2rem 0 0.5rem;
-}
 
 .faq__item { border-bottom: 1px solid var(--line); }
 

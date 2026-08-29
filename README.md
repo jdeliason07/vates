@@ -101,11 +101,11 @@ but will not open it.
 It opens with five questions in the founders' own words — why glass, why a
 bottle, why it will not hold ice for two days, why No. 01, who it is for — quoted
 as written, because they answer why the thing exists at all and no edit of ours
-improves them. **The bottle** onward is the practical run, and each of those
-restates something the storefront or the shipping page already commits to; where
-a figure is not settled — the height and the weight, the clear finish's date — it
-says so rather than guessing, the same way the **In hand** panel leaves those two
-as dashes.
+improves them. The practical ones follow in the same list, unheaded, and each of
+those restates something the storefront or the shipping page already commits to;
+where a figure is not settled — the height and the weight, the clear finish's
+date — it says so rather than guessing, the same way the **In hand** panel leaves
+those two as dashes.
 
 ### What the idiom asks for, and what is not faked
 
