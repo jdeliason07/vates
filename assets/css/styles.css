@@ -1174,6 +1174,72 @@ a { color: inherit; }
 .prose a { color: var(--ink); }
 .prose__updated { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ink-3); }
 
+/* ── The FAQ ───────────────────────────────────────────────
+   The one plain page that is not a wall of prose: a shop this shape
+   answers questions in an accordion, so each one is a <details> the
+   browser opens on its own. No script — the disclosure is native, so
+   it works with app.js absent, which is how every plain page loads.
+   The questions carry their own ids so a link can point at one; the
+   page script opens whichever id is in the URL. ------------------ */
+
+.faq { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+
+.faq__group {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 2rem 0 0.5rem;
+}
+
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__q {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  list-style: none;
+}
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q:hover { color: var(--ink-2); }
+.faq__q:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* The +/− sits at the end of the row, the way the product tiles put
+   their round + in the corner. Two gradient strokes crossed; opening
+   collapses the upright one to nothing and leaves the minus. Reduced
+   motion gets the same two states without the collapse being drawn. */
+.faq__q::after {
+  content: "";
+  margin-left: auto;
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  align-self: center;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
+  transition: background-size 0.2s ease;
+}
+.faq__item[open] > .faq__q::after { background-size: 100% 1px, 1px 0; }
+
+.faq__a { padding: 0 0 1.35rem; color: var(--ink-2); max-width: 40rem; }
+.faq__a p { margin-bottom: 0.75rem; }
+.faq__a p:last-child { margin-bottom: 0; }
+.faq__a ul { margin: 0 0 0.75rem; padding-left: 1.1rem; list-style: disc; }
+.faq__a li { margin-bottom: 0.35rem; }
+.faq__a a { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__q::after { transition: none; }
+}
+
 /* ── The leaderboard ───────────────────────────────────────── */
 
 .board { margin-top: 2rem; }

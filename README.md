@@ -18,6 +18,7 @@ python3 -m http.server 8000   # → http://localhost:8000
 index.html                     the storefront
 thanks.html                    order confirmation — fires the Purchase event
 leaderboard.html               what each creator has earned, ranked
+faq.html                       the questions, in a native <details> accordion
 shipping.html privacy.html terms.html    the three Stripe asks for
 404.html  robots.txt  sitemap.xml  site.webmanifest  favicon.ico
 assets/js/config.js            THE ONLY FILE TO EDIT TO GO LIVE
@@ -86,10 +87,19 @@ dots on the kit tiles. There is no second palette.
 10. **The closing ask**, **the signup band**, **the footer**, and the wordmark
     across the bottom.
 
-`leaderboard.html` and the legal pages sit outside that order. They wear the
-same masthead and footer with the moving parts left out: no cart to open and no
-menu to trap focus in, so the wordmark and a Shop pill do the whole job, and
-none of them loads `app.js`.
+`leaderboard.html`, `faq.html` and the legal pages sit outside that order. They
+wear the same masthead and footer with the moving parts left out: no cart to open
+and no menu to trap focus in, so the wordmark and a Shop pill do the whole job,
+and none of them loads `app.js`.
+
+`faq.html` is the one of those that is not a wall of prose. A shop this shape
+answers questions in an accordion, so each answer is a native `<details>`: it
+opens with no script, and the only script on the page opens whichever question a
+link points at (`faq.html#broken`) — the browser scrolls to a closed `<details>`
+but will not open it. Every answer restates something the storefront or the
+shipping page already commits to; where a figure is not settled — the height and
+the weight, the clear finish's date — it says so rather than guessing, the same
+way the **In hand** panel leaves those two as dashes.
 
 ### What the idiom asks for, and what is not faked
 
