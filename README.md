@@ -18,7 +18,7 @@ python3 -m http.server 8000   # → http://localhost:8000
 index.html                     the storefront
 thanks.html                    order confirmation — fires the Purchase event
 leaderboard.html               what each creator has earned, ranked
-faq.html                       the questions, in a native <details> accordion
+faq.html                       Questions worth asking — a <details> accordion
 shipping.html privacy.html terms.html    the three Stripe asks for
 404.html  robots.txt  sitemap.xml  site.webmanifest  favicon.ico
 assets/js/config.js            THE ONLY FILE TO EDIT TO GO LIVE
@@ -96,10 +96,16 @@ and none of them loads `app.js`.
 answers questions in an accordion, so each answer is a native `<details>`: it
 opens with no script, and the only script on the page opens whichever question a
 link points at (`faq.html#broken`) — the browser scrolls to a closed `<details>`
-but will not open it. Every answer restates something the storefront or the
-shipping page already commits to; where a figure is not settled — the height and
-the weight, the clear finish's date — it says so rather than guessing, the same
-way the **In hand** panel leaves those two as dashes.
+but will not open it.
+
+It opens with five questions in the founders' own words — why glass, why a
+bottle, why it will not hold ice for two days, why No. 01, who it is for — quoted
+as written, because they answer why the thing exists at all and no edit of ours
+improves them. **The bottle** onward is the practical run, and each of those
+restates something the storefront or the shipping page already commits to; where
+a figure is not settled — the height and the weight, the clear finish's date — it
+says so rather than guessing, the same way the **In hand** panel leaves those two
+as dashes.
 
 ### What the idiom asks for, and what is not faked
 
