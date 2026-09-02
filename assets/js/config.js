@@ -54,7 +54,7 @@ window.VATES = {
     id: "no-01",
     sku: "VATES-NO01",
     name: "No. 01",
-    price: 89,
+    price: 49,
     currency: "USD",
 
     /* The edition line under the price. Leave number unset and the page
