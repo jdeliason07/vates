@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>No. 01 — a one-piece glass water bottle | vates</title>
-<meta name="description" content="No. 01 by vates. One piece of borosilicate glass, a machined steel cap, 32 ounces. $89, free shipping, 30-day returns. For the creators of the world.">
+<meta name="description" content="No. 01 by vates. One piece of borosilicate glass, a machined steel cap, 32 ounces. $49, free shipping on every preorder, 30-day returns. For the creators of the world.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000">
 
@@ -20,14 +20,14 @@
 <meta property="og:site_name" content="vates">
 <meta property="og:url" content="https://loom-one-lime.vercel.app/">
 <meta property="og:title" content="No. 01 — a one-piece glass water bottle">
-<meta property="og:description" content="One piece of borosilicate glass, a machined steel cap, 32 ounces. $89, free shipping, 30-day returns.">
+<meta property="og:description" content="One piece of borosilicate glass, a machined steel cap, 32 ounces. $49, free shipping on every preorder, 30-day returns.">
 <meta property="og:image" content="https://loom-one-lime.vercel.app/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Two No. 01 bottles, one clear and one smoke grey, on a workbench.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="No. 01 — a one-piece glass water bottle">
-<meta name="twitter:description" content="One piece of borosilicate glass, a machined steel cap, 32 ounces. $89, free shipping, 30-day returns.">
+<meta name="twitter:description" content="One piece of borosilicate glass, a machined steel cap, 32 ounces. $49, free shipping on every preorder, 30-day returns.">
 <meta name="twitter:image" content="https://loom-one-lime.vercel.app/assets/img/og.jpg">
 
 <link rel="icon" href="assets/brand/vates-mark.svg" type="image/svg+xml">
@@ -63,9 +63,9 @@
   "offers": {
     "@type": "Offer",
     "url": "https://loom-one-lime.vercel.app/",
-    "price": "89.00",
+    "price": "49.00",
     "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock",
+    "availability": "https://schema.org/PreOrder",
     "itemCondition": "https://schema.org/NewCondition",
     "shippingDetails": {
       "@type": "OfferShippingDetails",
@@ -98,7 +98,7 @@
   </button>
 
   <div class="announce__viewport" id="announce" aria-live="off">
-    <p class="announce__item is-current"><a href="shipping.html">Free shipping on every order.</a></p>
+    <p class="announce__item is-current"><a href="shipping.html">Preorder now &mdash; shipping is on us.</a></p>
     <p class="announce__item"><a href="shipping.html#returns">30-day returns, for any reason or none.</a></p>
     <p class="announce__item"><a href="#product-no-01">An edition of 500 — numbered by hand.</a></p>
   </div>
@@ -214,16 +214,16 @@
 
         <li class="card" id="product-no-01" data-collection="best bottles">
           <div class="card__tile card__tile--stage">
-            <p class="card__badge">In stock</p>
+            <p class="card__badge">Preorder</p>
             <img class="card__img" src="assets/img/no-01-thumb.webp" width="345" height="1222"
                  alt="The No. 01 bottle in smoke grey: faceted glass in an irregular
                       cracked-ice pattern, tapering to a machined steel cap, with
                       “For the creators of the world” embossed around the base.">
-            <button type="button" class="card__add" data-purchase aria-label="Add No. 01 in smoke to your cart">+</button>
+            <button type="button" class="card__add" data-purchase aria-label="Preorder No. 01 in smoke">+</button>
           </div>
           <p class="card__tier"><span class="card__dot card__dot--smoke" aria-hidden="true"></span> Smoke</p>
           <h3 class="card__name">No.&thinsp;01</h3>
-          <p class="card__price">$89 <span>|</span> 32 oz</p>
+          <p class="card__price">$49 <span>|</span> 32 oz</p>
           <!-- Reads window.VATES.product.edition in config.js. With no number
                set, this line stands as written — true as long as the run is
                actually capped at editionTotal. Set edition.number once real
@@ -512,9 +512,9 @@
 <section class="cta" id="cta">
   <div class="container">
     <h2 class="cta__tag">Take No.&thinsp;01 with you.</h2>
-    <p class="cta__sub">$89 · an edition of 500 · free shipping, 30-day returns</p>
+    <p class="cta__sub">$49 · an edition of 500 · free shipping on every preorder</p>
     <p class="cta__row">
-      <button type="button" class="btn btn--primary" data-purchase>Purchase</button>
+      <button type="button" class="btn btn--primary" data-purchase>Preorder</button>
     </p>
   </div>
 </section>
@@ -704,7 +704,63 @@
     </div>
     <button type="button" class="btn btn--primary btn--block" id="checkout" disabled>Checkout</button>
     <p class="drawer__notice" id="drawer-notice" role="status" hidden></p>
-    <p class="drawer__fineprint">Demonstration storefront. No payment is processed.</p>
+    <p class="drawer__fineprint">A preorder &mdash; free shipping, ships at the drop.
+      Demonstration storefront: no payment is processed.</p>
+  </div>
+</aside>
+
+<!-- ── The preorder gate ─────────────────────────────────────
+     The first thing the site says, and it says it once: No. 01 is
+     open for preorder, and the free shipping is a term of the
+     preorder rather than a standing offer. Every claim in here is
+     made again on the shipping and terms pages — a gate that
+     promises something the rest of the site does not is a refund
+     request with a countdown on it.
+
+     It shares the backdrop, the focus trap and the Escape key with
+     the menu and the drawer; app.js only ever has one of the three
+     open, and Preorder hands straight over to the drawer. -->
+<aside class="gate" id="preorder-gate" role="dialog" aria-modal="true"
+       aria-labelledby="gate-title" aria-describedby="gate-sub" tabindex="-1" hidden>
+  <span class="gate__bands" aria-hidden="true"></span>
+
+  <button type="button" class="gate__close" id="gate-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none"
+         stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+
+  <div class="gate__inner">
+    <!-- Decorative here: the bottle is described in full on the tile
+         this sits over, so a second alt text is noise to a screen
+         reader. -->
+    <div class="gate__stage" aria-hidden="true">
+      <img src="assets/img/no-01-thumb.webp" width="345" height="1222" alt=""
+           loading="lazy" decoding="async">
+    </div>
+
+    <div class="gate__copy">
+      <p class="label">Preorder &middot; an edition of 500</p>
+      <h2 class="gate__title" id="gate-title">Free shipping ends at the drop.</h2>
+      <p class="gate__sub" id="gate-sub">Preorder No.&thinsp;01 now and the
+        shipping is on us. When the drop opens to everyone, it goes back on
+        the invoice.</p>
+
+      <p class="gate__price">
+        <span class="gate__amount">$49</span>
+        <span class="gate__meta">32&nbsp;oz &middot; one-piece borosilicate glass</span>
+      </p>
+
+      <button type="button" class="btn btn--primary btn--block gate__go" data-purchase>
+        Preorder &mdash; $49
+      </button>
+      <button type="button" class="gate__dismiss" id="gate-dismiss">Not right now</button>
+
+      <p class="gate__fine">Free shipping applies to preorders only. Ships when
+        the edition is ready, 30-day returns either way &mdash;
+        <a href="shipping.html">the details</a>.</p>
+    </div>
   </div>
 </aside>
 

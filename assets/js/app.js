@@ -11,7 +11,7 @@
   var PRODUCT = {
     id: "no-01",
     name: "No. 01",
-    price: 89,
+    price: 49,
     /* The drawer shows the bottle on its own — at 4.5rem a whole
        room is a smudge. */
     image: "assets/img/no-01-thumb.webp",
@@ -397,6 +397,61 @@
   });
 
   render();
+
+  /* ── The preorder gate ───────────────────────────────────
+     The offer, said once, before anything else: preorder now and the
+     shipping is free, which stops being true when the drop opens.
+     It is the drawer's own machinery in a different shape — the same
+     backdrop, the same focus trap, the same Escape key — so opening
+     it closes whatever else was open, and its Preorder button is an
+     ordinary [data-purchase]: it fills the cart and hands over to the
+     drawer, which is where the box gets read and the money is taken.
+
+     Shown at most once a week per browser, and never over a cart that
+     already has something in it. A gate that greets the same person
+     on every visit is an obstacle wearing an offer's clothes, and one
+     that greets a buyer mid-purchase is in the way of the sale it was
+     built to make. --------------------------------------------- */
+
+  (function () {
+    var gate = document.getElementById("preorder-gate");
+    if (!gate) return;
+
+    var KEY = "vates:gate-seen";
+    var WEEK = 7 * 24 * 60 * 60 * 1000;
+    var DELAY = 1200;   // long enough for the hero to have painted
+
+    /* Private browsing throws on these rather than returning null, so
+       a failed read means "not seen" and a failed write is simply not
+       remembered. The gate degrades to once per page load — never to
+       a page that stops running. */
+    function seenRecently() {
+      try {
+        var at = Number(window.localStorage.getItem(KEY));
+        return !!at && (Date.now() - at) < WEEK;
+      } catch (e) { return false; }
+    }
+
+    function remember() {
+      try { window.localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+    }
+
+    function dismiss() { closePanel(gate); }
+
+    document.getElementById("gate-close").addEventListener("click", dismiss);
+    document.getElementById("gate-dismiss").addEventListener("click", dismiss);
+
+    if (seenRecently()) return;
+
+    window.setTimeout(function () {
+      if (openPanel || cart.length) return;
+      openPanelEl(gate, gate);
+      /* Counted when it is shown, not when it is closed: the backdrop
+         and the Escape key close it too, and none of those is a reason
+         to show it again tomorrow. */
+      remember();
+    }, DELAY);
+  })();
 
   /* ── The announcement bar ────────────────────────────────
      Cross-fades between the standing lines, and stops advancing on
