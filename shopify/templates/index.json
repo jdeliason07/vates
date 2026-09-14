@@ -1,0 +1,220 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ *
+ * The homepage, reordered around the courage narrative:
+ *
+ *   BELIEF    vates_hero      Everything is possible.
+ *   TENSION   vates_tension   The problem is rarely possibility.
+ *   COURAGE   vates_courage   Courage changes everything.
+ *   IDENTITY  vates_faces     Courage looks different on everyone.
+ *   PRODUCT   vates_product   No.01
+ *   FACTS     vates_stats     750ml / 1 of 500 / $49
+ *   ACTION    vates_signup    Know when the next one opens.
+ *
+ * Dropped from the homepage, and why. All three sections still
+ * exist in the theme and can be re-added from the editor:
+ *
+ *   vates_trust     Three facts in a mono bar directly under the
+ *                   hero. It interrupted belief with logistics, and
+ *                   every line it carried is now in vates_stats or
+ *                   in the product terms.
+ *   vates_tiles     Two promo tiles, "Own one of the first 500" and
+ *                   "Learn what Vates stands for". Both destinations
+ *                   are the hero's own two buttons, so the tiles were
+ *                   a second, weaker copy of the hero.
+ *   vates_manifesto A pull-quote of the old mission statement. The
+ *                   argument is now made by the tension and courage
+ *                   sections in full, and the manifesto page is one
+ *                   click from the hero.
+ *
+ *   vates_ritual    Replaced by vates_courage, which keeps its
+ *                   measured crop and scroll reveal and drops the
+ *                   flow-state framing.
+ */
+{
+  "sections": {
+    "vates_hero": {
+      "type": "vates-hero",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0001.jpg",
+            "image_alt": "Vates No.01 on a desk beside a laptop in warm window light"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/vates-hero-rooftop.jpg",
+            "image_alt": "Vates No.01 on a rooftop table at golden hour, city skyline behind"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/vates-hero-desk-window.png",
+            "image_alt": "Vates No.01 on a walnut desk in window light, beside a notebook and laptop"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ],
+      "settings": {
+        "heading": "Everything is possible.",
+        "sub": "If you have the courage to act.",
+        "brand_mark": "shopify://shop_images/vates_logo_transparent.png",
+        "brand_word": "vates",
+        "tribe": "For the creators of the world.",
+        "primary_label": "Explore No.01",
+        "primary_link": "#product",
+        "secondary_label": "The manifesto",
+        "secondary_link": "shopify://pages/the-manifesto-1",
+        "badges": "",
+        "autoplay": true,
+        "rotate_seconds": 6,
+        "show_dots": true,
+        "carousel_label": "Vates No.01"
+      }
+    },
+    "vates_tension": {
+      "type": "vates-tension",
+      "settings": {
+        "eyebrow": "",
+        "opening": "Most people know what they want to do.",
+        "middle": "They know what they want to create. Who they want to become. What they would attempt if fear disappeared.",
+        "turn": "The problem is rarely <em>possibility</em>.\nIt's <em>courage</em>."
+      }
+    },
+    "vates_courage": {
+      "type": "vates-courage",
+      "settings": {
+        "eyebrow": "Courage",
+        "heading": "Courage changes everything.",
+        "image": "shopify://shop_images/IMG_2245.jpg",
+        "image_alt": "No.01 lying on an oak desk in window light, beside a pen and a closed notebook.",
+        "litany": "Courage to fail.\nCourage to be misunderstood.\nCourage to be disliked.\nCourage to leave what is comfortable.\nCourage to act before you know how it ends.",
+        "close_lead": "Everything is possible.",
+        "close_turn": "But possibility means nothing until you act."
+      }
+    },
+    "vates_faces": {
+      "type": "vates-faces",
+      "blocks": {
+        "story_1": {
+          "type": "story",
+          "settings": {
+            "image": "shopify://shop_images/566075F6-E65F-474E-8C41-6BD5AF5E3D78.jpg",
+            "image_alt": "A Vates No.01 bottle on a working desk, drawings pinned behind it.",
+            "eyebrow": "At work",
+            "line": "The work happens long before anyone is watching.",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_1"
+      ],
+      "settings": {
+        "eyebrow": "Who this is for",
+        "heading": "Courage looks different on everyone.",
+        "roles": "The founder.\nThe artist.\nThe athlete.\nThe filmmaker.\nThe builder.\nThe person becoming someone they have never been before.",
+        "show_slot": true,
+        "slot_eyebrow": "Stories · coming",
+        "slot_text": "This row is where the films and creator stories go. Each one is a single image, a name and a line — added as the footage exists, never before."
+      }
+    },
+    "vates_product": {
+      "type": "vates-product",
+      "settings": {
+        "product": "no-01",
+        "eyebrow": "The first object",
+        "heading": "No.01",
+        "standfirst": "The first physical symbol of Vates.",
+        "body": "We wanted the first thing we made to be something you carry every day. A reminder that seeing what is possible means nothing unless you have the courage to build it.",
+        "buy_eyebrow": "First batch",
+        "name": "",
+        "description": "A reminder to act. Hand-painted borosilicate glass, made once and kept for years.",
+        "chips": "750ml, Borosilicate, Smoke ombré, 1 of 500",
+        "button_action": "cart",
+        "button_label": "Pre-order No.01",
+        "button_link": "",
+        "note": "Charged today. The first batch of 500 ships November 7, 2026. Free shipping on every order.",
+        "stage_caption": "No.01 · smoke",
+        "spin_enabled": true,
+        "spin_image": "shopify://shop_images/vates-no01-cutout.png",
+        "spin_height": 370,
+        "spin_seconds": 10,
+        "spin_engraving": "for the creators of the world",
+        "engraving_scale": 155,
+        "spin_wrap": 150,
+        "spin_direction": "1"
+      }
+    },
+    "vates_stats": {
+      "type": "vates-stats",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "number": "750ml",
+            "label": "Capacity",
+            "text": "Enough for a full working session, not a trip back to the tap."
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "number": "1 of 500",
+            "label": "First batch",
+            "text": "No open-ended run. When it's gone, the next batch starts from zero."
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "number": "$49",
+            "label": "Price",
+            "text": "Free shipping on every order. Hand-painted, small batch, shipped from Provo, UT."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {}
+    },
+    "vates_signup": {
+      "type": "vates-signup",
+      "settings": {
+        "heading": "Know when the next one opens.",
+        "placeholder": "Email",
+        "button_label": "Keep me posted",
+        "tag": "newsletter",
+        "success_message": "You're on the list.",
+        "note": "The first 500 are open now. We'll email you when the next batch is."
+      }
+    }
+  },
+  "order": [
+    "vates_hero",
+    "vates_tension",
+    "vates_courage",
+    "vates_faces",
+    "vates_product",
+    "vates_stats",
+    "vates_signup"
+  ]
+}

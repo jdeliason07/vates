@@ -1,0 +1,73 @@
+{% comment %}
+  Vates — the tension.
+
+  The problem Vates exists against, and the quietest section on the
+  page. One column, a great deal of air, and nothing else: no cards,
+  no bullets, no icons. The brief for this section is that it must be
+  visually sparse, and the only way to keep it that way is to give the
+  merchant three text fields and no layout options.
+
+  The two operative nouns are wrapped in <em> by the turn field's
+  own markup, and vates-courage.css paints <em> white against smoke
+  body copy — so the eye assembles "possibility / courage" before it
+  reads a sentence. That is the whole design of the section.
+{% endcomment %}
+
+{% render 'vates-head' %}
+
+<section class="vt vt-tension" id="tension">
+  <div class="vt-wrap vt-tension__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <div class="vt-section-eyebrow">{{ section.settings.eyebrow }}</div>
+    {%- endif -%}
+
+    <div class="vt-tension__body">
+      {%- if section.settings.opening != blank -%}
+        <p>{{ section.settings.opening }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.middle != blank -%}
+        <p>{{ section.settings.middle }}</p>
+      {%- endif -%}
+
+      {%- comment -%}
+        newline_to_br so the turn can break where the writing breaks —
+        this is the one place on the page where the line break is the
+        punctuation.
+      {%- endcomment -%}
+      {%- if section.settings.turn != blank -%}
+        <p class="vt-tension__turn">{{ section.settings.turn | newline_to_br }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vates tension",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    {
+      "type": "textarea",
+      "id": "opening",
+      "label": "Opening line",
+      "default": "Most people know what they want to do."
+    },
+    {
+      "type": "textarea",
+      "id": "middle",
+      "label": "Middle",
+      "default": "They know what they want to create. Who they want to become. What they would attempt if fear disappeared."
+    },
+    {
+      "type": "textarea",
+      "id": "turn",
+      "label": "The turn",
+      "info": "Set in white. Wrap the words that should carry the most weight in <em>…</em>. Line breaks are kept.",
+      "default": "The problem is rarely <em>possibility</em>.\nIt's <em>courage</em>."
+    }
+  ],
+  "presets": [{ "name": "Vates tension" }]
+}
+{% endschema %}

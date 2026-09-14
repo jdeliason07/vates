@@ -1,0 +1,394 @@
+/* ------------------------------------------------------------------
+   Vates — the courage repositioning.
+
+   A companion to vates-home.css, not a replacement. Everything here
+   is scoped under .vt and uses the tokens that file already defines
+   (--vt-ink, --vt-white, --vt-smoke, --vt-line, --vt-display,
+   --vt-body, --vt-mono), so the visual identity is unchanged: same
+   three faces, same near-black ground, same hairline language.
+
+   What it adds is a typographic hierarchy the old homepage did not
+   have. The old page was built out of modules — a trust bar, promo
+   tiles, a stat grid. The new one is built out of statements, and a
+   statement needs a scale the module system never provided.
+
+   Load order matters: vates-assets.liquid renders vates-home.css
+   first and this second, so the few rules here that deliberately
+   restate a .vt-hero property win on source order rather than by
+   out-specifying it.
+   ------------------------------------------------------------------ */
+
+.vt {
+  /* Statements are set at the top of Fraunces' optical-size axis.
+     At 5rem the low-opsz cut reads as a poster; opsz 144 has finer
+     serifs and tighter joins, which is what keeps uppercase serif at
+     this size reading as editorial instead. */
+  --vt-opsz-display: 'opsz' 144;
+  --vt-opsz-text: 'opsz' 72;
+}
+
+/* ── The statement scale ──────────────────────────────────────
+   Three sizes and no fourth. The whole page is: a statement, small
+   copy under it, an image. */
+.vt-statement {
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.96;
+  text-wrap: balance;
+  margin: 0;
+}
+.vt-statement--hero { font-size: clamp(2.7rem, 9.4vw, 7.4rem); }
+.vt-statement--lg { font-size: clamp(2.1rem, 6.6vw, 4.6rem); }
+.vt-statement--md { font-size: clamp(1.7rem, 4.6vw, 3.1rem); }
+
+.vt-lede {
+  font-size: clamp(1.02rem, 1.7vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--vt-smoke-light);
+  max-width: 34rem;
+}
+
+/* ── 1 · The belief hero ──────────────────────────────────────
+   The old hero put a product sentence under the headline with a word
+   that flipped through eight synonyms. The belief has to land without
+   a paragraph under it, so the headline grows and everything else
+   gets out of its way. */
+.vt-hero__h1 {
+  /* Restates the stylesheet's .vt-hero__h1: the 12ch clamp was sized
+     for "For the creators of the world." and would break
+     "EVERYTHING IS POSSIBLE." across four lines. */
+  font-variation-settings: var(--vt-opsz-display);
+  font-size: clamp(2.7rem, 9.4vw, 7.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  max-width: 18ch;
+}
+
+.vt-hero__sub {
+  margin-top: clamp(18px, 2.4vw, 26px);
+  font-family: var(--vt-display);
+  font-variation-settings: 'opsz' 40;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.5vw, 1.75rem);
+  line-height: 1.3;
+  color: var(--vt-smoke-light);
+  max-width: 26ch;
+}
+
+/* Under a rule and apart from the belief: the belief is the thesis,
+   and this is who is saying it. That separation is the whole point of
+   the repositioning — "for the creators of the world" is the tribe,
+   not the argument. */
+.vt-hero__brand {
+  margin-top: clamp(30px, 4.5vw, 52px);
+  padding-top: clamp(20px, 2.6vw, 28px);
+  border-top: 1px solid var(--vt-line);
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.vt-hero__brand img { height: 15px; width: auto; }
+.vt-hero__wordmark-text {
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+.vt-hero__tribe {
+  font-family: var(--vt-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vt-smoke);
+}
+
+/* ── 2 · The tension ──────────────────────────────────────────
+   The sparsest section on the page, and intentionally so: one column,
+   a great deal of air, and the two operative nouns as the only words
+   in white — so the eye assembles "possibility / courage" before it
+   reads a sentence. No cards, no bullets, no icons. */
+.vt-tension { padding: clamp(96px, 17vw, 210px) 0; }
+.vt-tension__inner { max-width: 46rem; }
+.vt-tension__body {
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-text);
+  font-weight: 300;
+  font-size: clamp(1.45rem, 4vw, 2.7rem);
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  color: var(--vt-smoke);
+  text-wrap: pretty;
+}
+.vt-tension__body p + p { margin-top: clamp(1.1em, 2vw, 1.3em); }
+.vt-tension__body p + .vt-tension__turn { margin-top: clamp(2rem, 5vw, 3.4rem); }
+.vt-tension__turn { color: var(--vt-white); }
+.vt-tension__turn em { font-style: normal; color: var(--vt-white); }
+
+/* ── 3 · Courage ──────────────────────────────────────────────
+   The photograph carries the headline, the litany sits on black
+   beneath it. One narrative beat, one section.
+
+   No scrim over the photograph: the type sits in the window light
+   already in it. That is why the crop and the copy box are specific
+   numbers rather than round ones — they are a measured pair, carried
+   over from the section this replaces. Move either and re-measure. */
+.vt-courage__photo {
+  --p: 1; /* scroll progress, 0-1; defaults up so no-JS shows the words */
+  position: relative;
+  display: grid;
+  align-content: start;
+  min-height: 74svh;
+  overflow: hidden;
+}
+.vt-courage__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 52% 44%;
+}
+.vt-courage__over {
+  position: relative;
+  z-index: 2;
+  padding: 11svh 6vw 0;
+  max-width: 30rem;
+}
+/* On the light half of the photograph, so the ink here is the ground
+   colour — not the page's off-white, which would vanish. */
+.vt-courage__over .vt-section-eyebrow { color: rgba(10, 10, 11, 0.62); }
+.vt-courage__over .vt-statement { color: var(--vt-ink); margin-top: 14px; }
+
+@media (min-width: 900px) {
+  .vt-courage__photo { min-height: 96svh; }
+  .vt-courage__over { padding: 13svh 0 0 5vw; max-width: min(38vw, 32rem); }
+}
+
+.vt-courage__litany { padding: clamp(80px, 13vw, 150px) 0; }
+.vt-courage__grid { display: grid; grid-template-columns: 1fr; gap: clamp(48px, 7vw, 96px); }
+@media (min-width: 900px) {
+  .vt-courage__grid { grid-template-columns: 1.05fr 1fr; align-items: end; }
+}
+
+.vt-litany {
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-text);
+  font-weight: 300;
+  font-size: clamp(1.32rem, 3.3vw, 2.15rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.vt-litany li { color: var(--vt-smoke-light); }
+.vt-litany li + li { margin-top: 0.12em; }
+
+.vt-courage__close {
+  font-family: var(--vt-display);
+  font-variation-settings: 'opsz' 96;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.vt-courage__close span { display: block; color: var(--vt-smoke); }
+
+/* The reveal. Each word carries its index; --t is that word's own
+   0-to-1, reaching 1 progressively later the further along the
+   sentence it sits. The +4 leaves the last word settled before the
+   section has finished arriving. */
+.vt-word {
+  --t: clamp(0, calc(var(--p) * (var(--n) + 4) - var(--i)), 1);
+  display: inline-block;
+  opacity: var(--t);
+  transform: translateY(calc((1 - var(--t)) * 0.35em));
+  will-change: opacity, transform;
+}
+
+/* ── 4 · Courage looks different on everyone ──────────────────
+   A frame for creator stories that do not exist yet. With no story
+   blocks it is a purely typographic section and looks finished; each
+   story added is one more figure in the row. */
+.vt-faces { padding: clamp(80px, 13vw, 150px) 0; border-top: 1px solid var(--vt-line); }
+.vt-faces__head { max-width: 40rem; }
+.vt-faces__head .vt-statement { margin-top: 16px; }
+
+.vt-roles {
+  margin: clamp(44px, 6vw, 72px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--vt-line);
+}
+.vt-roles li {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 3vw, 32px);
+  padding: clamp(15px, 2.1vw, 22px) 0;
+  border-bottom: 1px solid var(--vt-line);
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-text);
+  font-weight: 300;
+  font-size: clamp(1.25rem, 3.4vw, 2.05rem);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--vt-smoke-light);
+}
+.vt-roles li span {
+  font-family: var(--vt-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--vt-smoke);
+  flex: none;
+  width: 2.4em;
+  line-height: 1.9;
+}
+/* The last role is the point of the list, so it is the one line that
+   is not smoke. */
+.vt-roles li:last-child { color: var(--vt-white); }
+
+.vt-stories { margin-top: clamp(52px, 7vw, 88px); display: grid; gap: clamp(20px, 3vw, 32px); }
+@media (min-width: 760px) { .vt-stories { grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); } }
+
+.vt-story {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+  margin: 0;
+}
+.vt-story img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(22%) brightness(0.62);
+  transition: transform 0.6s ease;
+}
+.vt-story:hover img { transform: scale(1.03); }
+.vt-story__copy { position: relative; z-index: 2; padding: clamp(22px, 3vw, 34px); }
+.vt-story__copy .vt-eyebrow { color: var(--vt-smoke-light); }
+.vt-story__line {
+  margin-top: 10px;
+  font-family: var(--vt-display);
+  font-variation-settings: 'opsz' 48;
+  font-weight: 300;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  line-height: 1.3;
+  max-width: 22ch;
+}
+.vt .vt-story__link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--vt-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vt-white);
+  padding-bottom: 3px;
+}
+
+/* ── 5 · The product ──────────────────────────────────────────
+   Restates the stylesheet's centred .vt-product, which was built for
+   a single card on its own. The product now arrives after four
+   sections of argument, so it reads left-aligned like the rest of the
+   page and the copy sits above the card rather than around it. */
+.vt-product { text-align: left; padding: clamp(80px, 13vw, 150px) 0; border-top: 1px solid var(--vt-line); }
+.vt-product__head { max-width: 42rem; }
+.vt-product__head .vt-statement { margin-top: 16px; }
+.vt-product__head .vt-lede { margin-top: clamp(22px, 3vw, 32px); }
+.vt-product__head .vt-lede + .vt-lede { margin-top: 1.1em; }
+
+.vt-product__body {
+  margin-top: clamp(52px, 7vw, 88px);
+  display: grid;
+  gap: clamp(40px, 6vw, 72px);
+  align-items: center;
+}
+@media (min-width: 860px) { .vt-product__body { grid-template-columns: 1fr 1fr; } }
+
+.vt-product__stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: clamp(28px, 4vw, 48px);
+  background: linear-gradient(180deg, #101012 0%, #08080a 100%);
+  border: 1px solid var(--vt-line);
+  min-height: 380px;
+}
+.vt-product__stage .vt-eyebrow {
+  position: absolute;
+  top: clamp(20px, 3vw, 30px);
+  left: clamp(20px, 3vw, 30px);
+}
+/* The rotating cut-out keeps its own geometry from vates-spin.css; it
+   only needs to stop being centred by the old card. */
+.vt-product__stage .vt-spin { margin: 0; }
+.vt-product__stage .vt-card__media { max-width: 220px; margin: 0; }
+
+.vt-buy { display: flex; flex-direction: column; align-items: flex-start; }
+.vt-buy__name {
+  font-family: var(--vt-display);
+  font-variation-settings: var(--vt-opsz-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-top: 14px;
+}
+.vt-buy__line { margin-top: 14px; color: var(--vt-smoke-light); font-size: 0.98rem; max-width: 30rem; }
+.vt-buy__price {
+  margin-top: clamp(22px, 3vw, 30px);
+  font-family: var(--vt-mono);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.vt-buy__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.vt-buy form { width: 100%; max-width: 26rem; }
+.vt-buy .vt-btn { margin-top: clamp(26px, 3.5vw, 34px); width: 100%; max-width: 26rem; }
+.vt-buy__terms {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--vt-smoke);
+  max-width: 26rem;
+}
+
+/* ── 6 · The facts ────────────────────────────────────────────
+   The theme's existing spec grid, left as it is — a 1px hairline grid
+   reads as a spec sheet rather than as three cards, which is exactly
+   what this section should be. Only the alignment changes. */
+.vt-stats .vt-stat { text-align: left; }
+.vt-stats .vt-stat__num { font-variation-settings: var(--vt-opsz-display); }
+.vt-stats .vt-stat p { margin: 0; }
+
+/* ── 7 · Act ──────────────────────────────────────────────────
+   The signup keeps its markup and its form; it stops being centred so
+   the page ends in the same column it has used the whole way down. */
+.vt-signup { text-align: left; }
+.vt-signup .vt-wrap > * { margin-inline: 0; }
+.vt-signup h2 { margin-top: 16px; }
+.vt-signup__form { margin-inline: 0; }
+.vt-signup__note { margin-inline: 0; }
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .vt-courage__photo { --p: 1 !important; }
+  .vt-word { opacity: 1; transform: none; }
+  .vt-story img { transition: none; }
+  .vt-story:hover img { transform: none; }
+}

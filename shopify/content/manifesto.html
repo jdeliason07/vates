@@ -1,0 +1,132 @@
+<!--
+  The Manifesto — body HTML for the Shopify page `the-manifesto-1`.
+
+  Paste into the page's rich-text editor in code view (Online Store →
+  Pages → The Manifesto → "<>" ). The scoped <style> block follows the
+  pattern already used by the "Questions Worth Asking" page, so no
+  theme template change is needed to publish this.
+
+  The theme's page template renders the page title as an <h1> above
+  this body, so the opening statement here is an <h2>. If you want the
+  purer editorial page — the statement as the first thing on screen —
+  remove the "Title" block from the page template in the theme editor
+  and change the <h2> below to an <h1>.
+
+  Roughly 150 words. That is deliberate: this page is meant to be
+  read standing up, and the rewrite brief asked for 150 powerful words
+  rather than 700 average ones. Resist adding to it.
+
+  What was removed from the old page, and why:
+
+    · "Mission Statement / Our mission is to inspire and empower the
+      young people of our world…" — a corporate mission statement,
+      and the one piece of copy on the site that read like a nonprofit
+      brochure rather than a brand.
+
+    · "We are for: / We are against:" — the right instinct, wrong
+      form. The courage litany says the same thing without the
+      two-column debate structure.
+
+    · "Why the bottle / No.00 isn't a product. It's a decision, made
+      daily… Not hydration. Repetition." — this is where the site's
+      only surviving "No.00" reference lived, and where the
+      productivity framing was strongest. The object is now named
+      No.01 and framed as a symbol of a decision, not a habit loop.
+
+    · "Why no logo / It ships separately, as decals…" — a real and
+      good product fact, but it is a product detail, not a manifesto.
+      It belongs on the product page or the FAQ. Do not lose it:
+      it is worth keeping somewhere.
+-->
+<style>
+  .vates-mf { max-width: 50rem; }
+  .vates-mf > * { margin: 0; }
+
+  /* The page inherits the theme's faces and colours; these rules only
+     set scale and rhythm. Nothing here names a colour, so the page
+     follows the store's palette rather than pinning its own. */
+  .vates-mf__open {
+    font-size: clamp(2rem, 7vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    font-weight: 400;
+  }
+
+  /* Each beat is a short block with a lot of air around it. The rhythm
+     is the argument: see it, name the distance, name the cost, land. */
+  .vates-mf__beat {
+    margin-top: clamp(3rem, 8vw, 6.5rem);
+    max-width: 40rem;
+    font-size: clamp(1.3rem, 3.4vw, 2.2rem);
+    line-height: 1.36;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+    opacity: 0.78;
+  }
+  .vates-mf__beat strong { font-weight: 400; opacity: 1; }
+
+  .vates-mf__litany {
+    margin-top: clamp(3rem, 8vw, 6.5rem);
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 16%, transparent);
+  }
+  .vates-mf__litany li {
+    padding: clamp(0.8rem, 1.8vw, 1.2rem) 0;
+    border-bottom: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 16%, transparent);
+    font-size: clamp(1.15rem, 3vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    opacity: 0.78;
+  }
+
+  .vates-mf__land {
+    margin-top: clamp(3.5rem, 9vw, 7rem);
+    max-width: 34rem;
+    font-size: clamp(1.6rem, 4.6vw, 3rem);
+    line-height: 1.16;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .vates-mf__land span { display: block; opacity: 0.6; }
+
+  .vates-mf__sign {
+    margin-top: clamp(3rem, 7vw, 5.5rem);
+    padding-top: 1.6rem;
+    border-top: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 16%, transparent);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+</style>
+
+<div class="vates-mf">
+  <h2 class="vates-mf__open">There is a life you can see that does not exist yet.</h2>
+
+  <p class="vates-mf__beat">Something you want to build. Someone you want to become.
+    Something you know you need to do.</p>
+
+  <p class="vates-mf__beat">The distance between seeing it and creating it is
+    <strong>courage</strong>.</p>
+
+  <ul class="vates-mf__litany">
+    <li>Courage to fail.</li>
+    <li>Courage to be misunderstood.</li>
+    <li>Courage to be disliked.</li>
+    <li>Courage to leave what is comfortable.</li>
+    <li>Courage to act before you know how it ends.</li>
+  </ul>
+
+  <p class="vates-mf__land">We believe everything is possible.
+    <span>But possibility means nothing without the courage to act.</span></p>
+
+  <p class="vates-mf__beat">Vates exists for that moment.</p>
+
+  <p class="vates-mf__sign">Vates &mdash; for the creators of the world.</p>
+</div>

@@ -1,0 +1,159 @@
+{% comment %}
+  Vates — courage looks different on everyone.
+
+  Built to be the most important section on this page eventually, and
+  deliberately underbuilt today. There is no creator footage yet, so
+  with no story blocks the section is purely typographic and looks
+  finished rather than empty: an eyebrow, a statement, and the roles
+  as a hairline-ruled list.
+
+  Adding a story later is adding one block — an image, an eyebrow, a
+  line, an optional link. The grid is auto-fit, so one story sits
+  beside the "coming" slot, two fill the row, and four wrap without
+  anything being re-laid-out by hand.
+
+  The slot itself is a real part of the design, not a placeholder to
+  be styled later. When there is enough footage, turn it off with the
+  checkbox rather than deleting it.
+{% endcomment %}
+
+{% render 'vates-head' %}
+
+{%- liquid
+  assign roles = section.settings.roles | newline_to_br | split: '<br />'
+  assign stories = section.blocks | where: 'type', 'story'
+-%}
+
+<section class="vt vt-faces" id="faces">
+  <div class="vt-wrap">
+    <div class="vt-faces__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="vt-section-eyebrow">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+      <h2 class="vt-statement vt-statement--lg">{{ section.settings.heading }}</h2>
+    </div>
+
+    {%- if roles.size > 0 -%}
+      {%- comment -%}
+        Numbered because the list is ordered — it runs from the most
+        specific role to the most universal, and the last line is the
+        one that includes the reader. It is a sequence, not decoration.
+      {%- endcomment -%}
+      <ol class="vt-roles">
+        {%- assign shown = 0 -%}
+        {%- for role in roles -%}
+          {%- assign clean = role | strip_html | strip -%}
+          {%- if clean == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- assign shown = shown | plus: 1 -%}
+          <li>
+            <span>{{ shown | prepend: '0' | slice: -2, 2 }}</span>
+            {{- clean -}}
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if stories.size > 0 or section.settings.show_slot -%}
+      <div class="vt-stories">
+        {%- for block in stories -%}
+          <figure class="vt-story" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  decoding: 'async',
+                  widths: '500, 800, 1100, 1400',
+                  sizes: '(max-width: 760px) 100vw, 50vw',
+                  alt: block.settings.image_alt
+              }}
+            {%- endif -%}
+            <figcaption class="vt-story__copy">
+              {%- if block.settings.eyebrow != blank -%}
+                <div class="vt-eyebrow">{{ block.settings.eyebrow }}</div>
+              {%- endif -%}
+              {%- if block.settings.line != blank -%}
+                <p class="vt-story__line">{{ block.settings.line }}</p>
+              {%- endif -%}
+              {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+                <a class="vt-story__link" href="{{ block.settings.link }}">
+                  {{- block.settings.link_label -}}
+                </a>
+              {%- endif -%}
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+
+        {%- if section.settings.show_slot -%}
+          <figure class="vt-story vt-story--slot">
+            <figcaption class="vt-story__copy">
+              <div class="vt-eyebrow">{{ section.settings.slot_eyebrow }}</div>
+              <p class="vt-story__line">{{ section.settings.slot_text }}</p>
+            </figcaption>
+          </figure>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vates faces",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Who this is for" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Courage looks different on everyone."
+    },
+    {
+      "type": "textarea",
+      "id": "roles",
+      "label": "Roles",
+      "info": "One per line, numbered automatically. Order matters — the last line is set in white, so put the most universal one last.",
+      "default": "The founder.\nThe artist.\nThe athlete.\nThe filmmaker.\nThe builder.\nThe person becoming someone they have never been before."
+    },
+    { "type": "header", "content": "The \"coming\" slot" },
+    {
+      "type": "paragraph",
+      "content": "Holds the space for creator stories and films until there is real footage. Turn it off once the stories fill the row on their own."
+    },
+    { "type": "checkbox", "id": "show_slot", "label": "Show the slot", "default": true },
+    { "type": "text", "id": "slot_eyebrow", "label": "Slot eyebrow", "default": "Stories · coming" },
+    {
+      "type": "textarea",
+      "id": "slot_text",
+      "label": "Slot text",
+      "default": "This row is where the films and creator stories go. Each one is a single image, a name and a line — added as the footage exists, never before."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "A name, a role, or a place.", "default": "At work" },
+        {
+          "type": "textarea",
+          "id": "line",
+          "label": "Line",
+          "info": "One sentence. If it needs a paragraph, it wants to be a film, not a tile.",
+          "default": "The work happens long before anyone is watching."
+        },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Vates faces" }]
+}
+{% endschema %}

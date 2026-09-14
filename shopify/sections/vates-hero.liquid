@@ -1,0 +1,513 @@
+{% comment %}
+  Vates hero — the belief.
+
+  Modified from the previous version of this file. The old hero led
+  with "For the creators of the world." over a product sentence whose
+  last word flipped through eight synonyms — visionary, creator,
+  dreamer, builder. That put the tribe and the bottle in the first
+  frame and left the belief unsaid.
+
+  The order is now: belief, then the condition on it, then who is
+  saying it.
+
+      EVERYTHING IS POSSIBLE.
+      If you have the courage to act.
+      ───────────────────────────────
+      vates · FOR THE CREATORS OF THE WORLD.
+
+  "For the creators of the world" is kept, and kept deliberately
+  below a rule: it is the tribe, not the argument. The rotating word
+  and its script are gone — a headline this size does not need help,
+  and the flip was the one piece of motion on the page that existed
+  because it was possible rather than because it earned its place.
+
+  What is unchanged, and should stay unchanged: the scroll-snap
+  carousel and its script. Swiping, trackpad scrolling and the arrow
+  keys all page through it for free; the timer yields to a manual
+  move, a hover, keyboard focus and a hidden tab. It works — leave it
+  alone.
+{% endcomment %}
+
+{% render 'vates-head' %}
+
+{%- liquid
+  assign badges = section.settings.badges | split: ','
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign rotate_ms = section.settings.rotate_seconds | times: 1000
+
+  # Counted up front so the dots can be laid out without re-walking the blocks
+  # inside the markup — an empty picker is skipped in both places.
+  assign slide_count = 0
+  for block in slides
+    if block.settings.image != blank
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- comment -%}
+  The carousel rules live with the section rather than in
+  vates-home.css: they exist only for this pager, and scoping them to
+  the section's id keeps them from reaching any other hero on the
+  store. The slides still take their cover fit from the
+  `.vt-hero__media img` rule in the stylesheet.
+{%- endcomment -%}
+<style>
+  #shopify-section-{{ section.id }} .vt-hero__track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ section.id }} .vt-hero__track::-webkit-scrollbar { display: none; }
+
+  #shopify-section-{{ section.id }} .vt-hero__slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  #shopify-section-{{ section.id }} .vt-hero__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  /* The button is padded out to a 24px touch target around a 7px dot. */
+  #shopify-section-{{ section.id }} .vt-hero__dot {
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 9px 6px;
+    line-height: 0;
+    cursor: pointer;
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .vt-hero__dot::before {
+    content: '';
+    display: block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(243, 242, 238, 0.45);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .vt-hero__dot.is-current::before {
+    background: #f3f2ee;
+    transform: scale(1.3);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .vt-hero__dot::before { transition: none; }
+  }
+</style>
+
+<header class="vt vt-hero" id="top">
+  <div class="vt-hero__copy">
+    {%- if badges.size > 0 -%}
+      <div class="vt-badges">
+        {%- for badge in badges -%}
+          <span class="vt-badge">{{ badge | strip }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <h1 class="vt-hero__h1">{{ section.settings.heading }}</h1>
+
+    {%- if section.settings.sub != blank -%}
+      <p class="vt-hero__sub">{{ section.settings.sub }}</p>
+    {%- endif -%}
+
+    {%- comment -%}
+      The brand block. The wordmark is artwork and is never re-set in
+      type, so if no image is chosen this falls back to the word in
+      the display face rather than to a bare sans-serif "VATES".
+    {%- endcomment -%}
+    {%- if section.settings.brand_mark != blank or section.settings.tribe != blank -%}
+      <p class="vt-hero__brand">
+        {%- if section.settings.brand_mark != blank -%}
+          {{
+            section.settings.brand_mark
+            | image_url: width: 600
+            | image_tag: widths: '200, 400, 600', sizes: '120px', alt: shop.name
+          }}
+        {%- elsif section.settings.brand_word != blank -%}
+          <span class="vt-hero__wordmark-text">{{ section.settings.brand_word }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.tribe != blank -%}
+          <span class="vt-hero__tribe">{{ section.settings.tribe }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    <div class="vt-hero__btns">
+      {%- if section.settings.primary_label != blank -%}
+        <a href="{{ section.settings.primary_link | default: '#product' }}" class="vt-btn vt-btn--solid">
+          {{- section.settings.primary_label -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.secondary_label != blank -%}
+        <a href="{{ section.settings.secondary_link | default: '#courage' }}" class="vt-btn vt-btn--ghost">
+          {{- section.settings.secondary_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div
+    class="vt-hero__media"
+    data-vt-carousel
+    data-vt-slide-ms="{{ rotate_ms }}"
+    data-vt-autoplay="{{ section.settings.autoplay }}"
+    {% if slide_count > 1 %}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="{{ section.settings.carousel_label | default: 'Product images' | escape }}"
+    {% endif %}
+  >
+    {%- comment -%}
+      A scroll-snap track rather than a stack of fades: swiping,
+      trackpad scrolling and the arrow keys all page through it for
+      free, and the script only has to keep the dots in step with
+      wherever it lands.
+    {%- endcomment -%}
+    <div
+      class="vt-hero__track"
+      data-vt-track
+      {% if slide_count > 1 %}tabindex="0"{% endif %}
+    >
+      {%- assign shown = 0 -%}
+      {%- for block in slides -%}
+        {%- if block.settings.image == blank -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- liquid
+          # `shown` rather than forloop.index, so an empty picker earlier in the
+          # list doesn't cost the first real image its priority hint.
+          assign slide_priority = 'low'
+          assign slide_loading = 'lazy'
+          if shown == 0
+            assign slide_priority = 'high'
+            assign slide_loading = 'eager'
+          endif
+          assign shown = shown | plus: 1
+        -%}
+        <div class="vt-hero__slide" data-vt-slide {{ block.shopify_attributes }}>
+          {{
+            block.settings.image
+            | image_url: width: 1800
+            | image_tag:
+              loading: slide_loading,
+              fetchpriority: slide_priority,
+              widths: '600, 900, 1200, 1600, 1800',
+              sizes: '(max-width: 900px) 100vw, 52vw',
+              alt: block.settings.image_alt
+          }}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_dots and slide_count > 1 -%}
+      <div class="vt-hero__dots" data-vt-dots>
+        {%- for i in (1..slide_count) -%}
+          <button
+            type="button"
+            class="vt-hero__dot{% if forloop.first %} is-current{% endif %}"
+            data-vt-dot="{{ forloop.index0 }}"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-label="Show image {{ forloop.index }} of {{ slide_count }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</header>
+
+<script>
+  (function () {
+    var root = document.querySelector('#shopify-section-{{ section.id }} [data-vt-carousel]');
+    if (!root) return;
+    var track = root.querySelector('[data-vt-track]');
+    if (!track) return;
+    var slides = track.querySelectorAll('[data-vt-slide]');
+    var dots = root.querySelectorAll('[data-vt-dot]');
+    if (slides.length < 2) return;
+
+    var ms = parseInt(root.getAttribute('data-vt-slide-ms'), 10) || 6000;
+    var autoplay = root.getAttribute('data-vt-autoplay') === 'true';
+    // Paging slides the picture across the panel, so this one is real motion:
+    // readers who asked for less keep the dots and the swipe, minus the timer.
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var current = -1;
+    var timer = null;
+    var idle = null;
+    var resized = null;
+    var hovering = false;
+    var focused = false;
+    var pressing = false;
+
+    function indexFromScroll() {
+      if (!track.clientWidth) return current < 0 ? 0 : current;
+      return Math.round(track.scrollLeft / track.clientWidth);
+    }
+
+    function paint(index) {
+      if (index === current || index < 0 || index >= slides.length) return;
+      current = index;
+      for (var i = 0; i < dots.length; i++) {
+        var on = i === index;
+        if (on) dots[i].classList.add('is-current');
+        else dots[i].classList.remove('is-current');
+        dots[i].setAttribute('aria-current', on ? 'true' : 'false');
+      }
+    }
+
+    function goTo(index, smooth) {
+      var left = index * track.clientWidth;
+      if (track.scrollTo) track.scrollTo({ left: left, behavior: smooth && !reduced ? 'smooth' : 'auto' });
+      else track.scrollLeft = left;
+    }
+
+    function advance() {
+      goTo((indexFromScroll() + 1) % slides.length, true);
+    }
+
+    function start() {
+      if (autoplay && !reduced && !timer && !document.hidden && !hovering && !focused && !pressing) {
+        timer = setInterval(advance, ms);
+      }
+    }
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    // A manual move wins: the timer stays off until the viewer has been still
+    // for a full interval, so it never yanks the panel out from under a swipe.
+    function nudge() {
+      stop();
+      clearTimeout(idle);
+      idle = setTimeout(start, Math.max(ms, 4000));
+    }
+
+    var ticking = false;
+    track.addEventListener(
+      'scroll',
+      function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          ticking = false;
+          paint(indexFromScroll());
+        });
+      },
+      { passive: true }
+    );
+
+    for (var d = 0; d < dots.length; d++) {
+      (function (index) {
+        dots[index].addEventListener('click', function () {
+          goTo(index, true);
+          paint(index);
+          nudge();
+        });
+      })(d);
+    }
+
+    track.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      var index = indexFromScroll() + (event.key === 'ArrowRight' ? 1 : -1);
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+      goTo(index, true);
+      nudge();
+    });
+
+    // Only a mouse hovers. A touch fires pointerenter with no pointerleave to
+    // follow, so counting it would park the rotation for good after one tap.
+    function mouseOnly(handler) {
+      return function (event) {
+        if (event.pointerType && event.pointerType !== 'mouse') return;
+        handler();
+      };
+    }
+    root.addEventListener(
+      'pointerenter',
+      mouseOnly(function () {
+        hovering = true;
+        stop();
+      })
+    );
+    root.addEventListener(
+      'pointerleave',
+      mouseOnly(function () {
+        hovering = false;
+        start();
+      })
+    );
+
+    // Keyboard focus holds the carousel; the focus a tap or click leaves behind
+    // on the scroll container does not, or touching the picture would stop it.
+    root.addEventListener('focusin', function (event) {
+      var byKeyboard = true;
+      try {
+        byKeyboard = event.target.matches(':focus-visible');
+      } catch (error) {
+        byKeyboard = true;
+      }
+      if (!byKeyboard) return;
+      focused = true;
+      stop();
+    });
+    root.addEventListener('focusout', function () {
+      focused = false;
+      start();
+    });
+
+    root.addEventListener('pointerdown', function () {
+      pressing = true;
+      stop();
+    });
+    document.addEventListener('pointerup', function () {
+      if (!pressing) return;
+      pressing = false;
+      nudge(); // a swipe just landed: let it sit for a full interval
+    });
+
+    // A resize can leave the track parked between two slides.
+    window.addEventListener('resize', function () {
+      clearTimeout(resized);
+      resized = setTimeout(function () {
+        goTo(current < 0 ? 0 : current, false);
+      }, 150);
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop();
+      else start();
+    });
+    document.addEventListener('shopify:section:unload', function (event) {
+      if (event.detail.sectionId === '{{ section.id }}') {
+        stop();
+        clearTimeout(idle);
+      }
+    });
+
+    paint(0);
+    start();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Vates hero",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "info": "The belief. Set in uppercase display type at the largest size on the site — keep it to a handful of words.",
+      "default": "Everything is possible."
+    },
+    {
+      "type": "text",
+      "id": "sub",
+      "label": "Second line",
+      "info": "The condition on the belief. One line, not a paragraph.",
+      "default": "If you have the courage to act."
+    },
+    { "type": "header", "content": "The brand block" },
+    {
+      "type": "paragraph",
+      "content": "Sits below a hairline rule, apart from the headline: this is who is saying it, not the argument itself."
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_mark",
+      "label": "Wordmark",
+      "info": "A transparent PNG or SVG of the vates wordmark. The wordmark is artwork and is never re-set in type — if this is empty the section falls back to the word below, set in the display face."
+    },
+    { "type": "text", "id": "brand_word", "label": "Wordmark fallback text", "default": "vates" },
+    {
+      "type": "text",
+      "id": "tribe",
+      "label": "Identity line",
+      "default": "For the creators of the world."
+    },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "primary_label", "label": "Primary button label", "default": "Explore No.01" },
+    { "type": "url", "id": "primary_link", "label": "Primary button link" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary button label", "default": "The manifesto" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Product chips" },
+    {
+      "type": "text",
+      "id": "badges",
+      "label": "Chips (comma separated)",
+      "info": "Leave empty. Product facts in a hero that states a belief undercut it — they belong in the product section, which carries them.",
+      "default": ""
+    },
+    { "type": "header", "content": "Hero images" },
+    {
+      "type": "paragraph",
+      "content": "Add an image block for each page. Visitors can swipe, scroll or use the dots; with one block the hero stays still."
+    },
+    { "type": "checkbox", "id": "autoplay", "label": "Rotate automatically", "default": true },
+    {
+      "type": "range",
+      "id": "rotate_seconds",
+      "label": "Seconds per image",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    },
+    { "type": "checkbox", "id": "show_dots", "label": "Show the dots", "default": true },
+    {
+      "type": "text",
+      "id": "carousel_label",
+      "label": "Carousel label for screen readers",
+      "default": "Vates No.01"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Hero image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt text",
+          "default": "Vates No.01 resting on a wooden desk in window light"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vates hero",
+      "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }]
+    }
+  ]
+}
+{% endschema %}

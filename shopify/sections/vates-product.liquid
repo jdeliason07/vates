@@ -1,0 +1,314 @@
+{% comment %}
+  Vates product card — No.01.
+
+  Modified from the previous version of this file. What changed is
+  where the product sits in the argument and how confidently it is
+  presented, not how it is bought.
+
+  Before, this was a centred card under the heading "One bottle. No
+  variants. Nothing to choose but whether you're ready." — the page's
+  first real content, so it had to do all the selling itself. It now
+  arrives after four sections of philosophy, so it can stop working
+  so hard: the copy states what the object is, the facts sit in a
+  column beside the photograph, and nothing is oversold.
+
+  The bottle is the first physical symbol of Vates, not the company.
+  The copy says exactly that and stops.
+
+  Unchanged, and deliberately: the product form, the variant id, the
+  availability check, the money filter and the rotating cut-out with
+  its measured geometry. Checkout is not touched by this file.
+{% endcomment %}
+
+{% render 'vates-head' %}
+{{ 'vates-spin.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign product = section.settings.product
+  assign chips = section.settings.chips | split: ','
+
+  assign card_image = section.settings.image
+  if card_image == blank and product != blank
+    assign card_image = product.featured_image
+  endif
+
+  assign card_name = section.settings.name
+  if card_name == blank and product != blank
+    assign card_name = product.title
+  endif
+-%}
+
+<section class="vt vt-product" id="product">
+  <div class="vt-wrap">
+
+    <div class="vt-product__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="vt-section-eyebrow">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+
+      <h2 class="vt-statement vt-statement--lg">{{ section.settings.heading }}</h2>
+
+      {%- if section.settings.standfirst != blank -%}
+        <p class="vt-lede">{{ section.settings.standfirst }}</p>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <p class="vt-lede">{{ section.settings.body }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="vt-product__body">
+
+      <figure class="vt-product__stage">
+        {%- if section.settings.stage_caption != blank -%}
+          <div class="vt-eyebrow">{{ section.settings.stage_caption }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.spin_enabled and section.settings.spin_image != blank -%}
+          <div
+            class="vt-spin"
+            id="vt-spin-{{ section.id }}"
+            style="height: {{ section.settings.spin_height }}px;"
+          >
+            <div class="vt-spin__inner" data-vt-spin-inner>
+              {{
+                section.settings.spin_image
+                | image_url: width: 700
+                | image_tag: class: 'vt-spin__img', loading: 'lazy', alt: card_name
+              }}
+              <div class="vt-engrave" data-vt-engrave aria-hidden="true"></div>
+            </div>
+          </div>
+        {%- elsif card_image != blank -%}
+          <div class="vt-card__media">
+            {{
+              card_image
+              | image_url: width: 660
+              | image_tag: loading: 'lazy', widths: '220, 440, 660', sizes: '220px', alt: card_name
+            }}
+          </div>
+        {%- endif -%}
+      </figure>
+
+      <div class="vt-buy">
+        {%- if section.settings.buy_eyebrow != blank -%}
+          <div class="vt-eyebrow">{{ section.settings.buy_eyebrow }}</div>
+        {%- endif -%}
+
+        <div class="vt-buy__name">{{ card_name }}</div>
+
+        {%- if section.settings.description != blank -%}
+          <p class="vt-buy__line">{{ section.settings.description }}</p>
+        {%- endif -%}
+
+        {%- if product != blank -%}
+          <p class="vt-buy__price">{{ product.price | money }}</p>
+        {%- endif -%}
+
+        {%- if chips.size > 0 -%}
+          <div class="vt-buy__chips">
+            {%- for chip in chips -%}
+              <span class="vt-chip">{{ chip | strip }}</span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.button_action == 'cart' and product != blank -%}
+          {%- form 'product', product, id: 'vt-card-form' -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button
+              type="submit"
+              class="vt-btn vt-btn--solid"
+              {% unless product.available %}
+                disabled
+              {% endunless %}
+            >
+              {%- if product.available -%}
+                {{ section.settings.button_label }}
+              {%- else -%}
+                Sold out
+              {%- endif -%}
+            </button>
+          {%- endform -%}
+        {%- else -%}
+          <a href="{{ section.settings.button_link | default: '#reserve' }}" class="vt-btn vt-btn--solid">
+            {{- section.settings.button_label -}}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.note != blank -%}
+          <p class="vt-buy__terms">{{ section.settings.note }}</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.spin_enabled and section.settings.spin_image != blank -%}
+<script>
+  (function () {
+    var root = document.getElementById('vt-spin-{{ section.id }}');
+    if (!root) return;
+    var img = root.querySelector('.vt-spin__img');
+    var engrave = root.querySelector('[data-vt-engrave]');
+    if (!img || !engrave) return;
+
+    /* Measured from the cut-out: the body cylinder spans 0.46%-99.54% of its
+       width and the engraving sat at 91.1% of its height. Re-measure these if
+       the bottle photo is ever replaced. */
+    var BODY_L = 0.0046, BODY_R = 0.9954, TEXT_Y = 0.9108;
+
+    var TEXT = {{ section.settings.spin_engraving | json }};
+    var COPIES = 2;
+    var ARC = {{ section.settings.spin_wrap }} * Math.PI / 180;
+    var SECS = {{ section.settings.spin_seconds }};
+    var DIR = {{ section.settings.spin_direction }};
+    var SCALE = {{ section.settings.engraving_scale }} / 100;
+
+    var CHARS = TEXT.split('');
+    var glyphs = [];
+    for (var k = 0; k < COPIES; k++) {
+      for (var ci = 0; ci < CHARS.length; ci++) {
+        var el = document.createElement('span');
+        el.textContent = CHARS[ci];
+        engrave.appendChild(el);
+        glyphs.push({ el: el, idx: ci, copy: k });
+      }
+    }
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var theta = 0, w = 0, h = 0;
+
+    function measure() {
+      var r = img.getBoundingClientRect();
+      w = r.width; h = r.height;
+      var fs = h * 0.0185 * SCALE;
+      for (var i = 0; i < glyphs.length; i++) glyphs[i].el.style.fontSize = fs.toFixed(2) + 'px';
+    }
+
+    function render() {
+      if (!w) return;
+      var cx = w * (BODY_L + BODY_R) / 2;
+      var R = w * (BODY_R - BODY_L) / 2;
+      var baseY = h * TEXT_Y;
+      for (var i = 0; i < glyphs.length; i++) {
+        var G = glyphs[i], el = G.el;
+        var phi = (G.idx / (CHARS.length - 1) - 0.5) * ARC
+                + G.copy * (2 * Math.PI / COPIES)
+                + theta;
+        var c = Math.cos(phi);
+        if (c <= 0.04) { el.style.opacity = '0'; continue; }
+        el.style.opacity = (Math.pow(c, 0.55) * 0.85).toFixed(3);
+        el.style.transform =
+          'translate(' + (cx + R * Math.sin(phi)).toFixed(2) + 'px,' + baseY.toFixed(2) + 'px)' +
+          ' translateX(-50%) scaleX(' + c.toFixed(3) + ')';
+      }
+    }
+
+    var last = performance.now();
+    document.addEventListener('visibilitychange', function () { last = performance.now(); });
+
+    function frame(now) {
+      /* Cap the delta: a hidden tab hands back a huge one on return, which
+         would snap the bottle through several turns at once. */
+      var dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      if (!reduced) {
+        theta += DIR * (2 * Math.PI / SECS) * dt;
+        if (theta > Math.PI * 2) theta -= Math.PI * 2;
+        if (theta < 0) theta += Math.PI * 2;
+      }
+      render();
+      requestAnimationFrame(frame);
+    }
+
+    function start() { measure(); render(); requestAnimationFrame(frame); }
+    if (img.complete && img.naturalWidth) start();
+    else img.addEventListener('load', start, { once: true });
+    window.addEventListener('resize', function () { measure(); render(); });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vates product card",
+  "tag": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The first object" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "No.01"
+    },
+    {
+      "type": "textarea",
+      "id": "standfirst",
+      "label": "Standfirst",
+      "default": "The first physical symbol of Vates."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "info": "Two sentences at most. The philosophy has already been made by the time a reader gets here.",
+      "default": "We wanted the first thing we made to be something you carry every day. A reminder that seeing what is possible means nothing unless you have the courage to build it."
+    },
+    { "type": "header", "content": "The buy column" },
+    { "type": "text", "id": "buy_eyebrow", "label": "Eyebrow", "default": "First batch" },
+    { "type": "text", "id": "name", "label": "Name override", "info": "Leave empty to use the product title." },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "One-line description",
+      "default": "A reminder to act. Hand-painted borosilicate glass, made once and kept for years."
+    },
+    {
+      "type": "text",
+      "id": "chips",
+      "label": "Chips (comma separated)",
+      "default": "750ml, Borosilicate, Smoke ombré, 1 of 500"
+    },
+    {
+      "type": "select",
+      "id": "button_action",
+      "label": "Button action",
+      "options": [
+        { "value": "link", "label": "Link (e.g. to the signup form)" },
+        { "value": "cart", "label": "Add to cart" }
+      ],
+      "default": "cart"
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Pre-order No.01" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Used when the action is Link. Defaults to the signup form." },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Terms under the button",
+      "info": "Price, shipping and batch terms. Keep this identical to the spec grid and the product page — a figure that disagrees with itself across the site costs more trust than it buys.",
+      "default": "Charged today. The first batch of 500 ships November 7, 2026. Free shipping on every order."
+    },
+    { "type": "header", "content": "The photograph" },
+    { "type": "text", "id": "stage_caption", "label": "Caption", "default": "No.01 · smoke" },
+    { "type": "image_picker", "id": "image", "label": "Image override", "info": "Leave empty to use the product's featured image. Ignored when the rotating bottle is on." },
+    { "type": "header", "content": "Rotating bottle" },
+    { "type": "checkbox", "id": "spin_enabled", "label": "Show the bottle rotating", "default": true },
+    { "type": "image_picker", "id": "spin_image", "label": "Cut-out bottle (transparent PNG)", "info": "Must be the background-free bottle, shot straight on." },
+    { "type": "range", "id": "spin_height", "min": 240, "max": 640, "step": 10, "unit": "px", "label": "Bottle height", "default": 370 },
+    { "type": "range", "id": "spin_seconds", "min": 4, "max": 40, "step": 1, "unit": "s", "label": "Seconds per turn", "default": 10 },
+    { "type": "text", "id": "spin_engraving", "label": "Engraved text", "default": "for the creators of the world" },
+    { "type": "range", "id": "engraving_scale", "min": 60, "max": 180, "step": 5, "unit": "%", "label": "Engraving size", "default": 155 },
+    { "type": "range", "id": "spin_wrap", "min": 90, "max": 220, "step": 5, "unit": "°", "label": "Text wrap", "default": 150 },
+    {
+      "type": "select", "id": "spin_direction", "label": "Direction", "default": "1",
+      "options": [
+        { "value": "1", "label": "Left to right" },
+        { "value": "-1", "label": "Right to left" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Vates product card" }]
+}
+{% endschema %}

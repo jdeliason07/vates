@@ -1,0 +1,215 @@
+{% comment %}
+  Vates — courage.
+
+  Replaces sections/vates-ritual.liquid. The old section framed the
+  bottle as "your ritualistic object — a signal to your brain that
+  it's time to enter the flow state", which made Vates read as a
+  productivity brand. The philosophy is bigger than productivity, so
+  the section keeps the engineering and changes the argument.
+
+  What is carried over verbatim from vates-ritual, because it was
+  measured rather than guessed:
+
+    · The crop and the copy box. There is no overlay — the type sits
+      in the window light already in the photograph. Measured against
+      the desk image the darkest patch under the glyphs is 7.1:1 at
+      1920 and 1440, 7.7:1 on a tablet, 7.4:1 on a phone and 7.7:1 on
+      a 360px one, all clear of WCAG AA with nothing laid over the
+      picture at all. Move the crop, the copy box or the photograph
+      and that stops being true — re-measure if you do.
+
+    · The reveal. Driven by scroll position rather than by a trigger
+      line: each word carries its index, and --p on the section is how
+      far it has travelled into place.
+
+  What is new is the litany beneath it, on black. Headline over the
+  photograph, supporting copy under it: one narrative beat, one
+  section, so the two halves cannot be reordered or separated by a
+  merchant rearranging the homepage.
+{% endcomment %}
+
+{% render 'vates-head' %}
+
+{%- liquid
+  assign section_id = 'vt-courage-' | append: section.id
+  assign heading_words = section.settings.heading | split: ' '
+  assign word_count = heading_words.size | plus: 1
+  assign lines = section.settings.litany | newline_to_br | split: '<br />'
+-%}
+
+<section class="vt" id="courage">
+  <div class="vt-courage__photo" id="{{ section_id }}" style="--n: {{ word_count }};">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          decoding: 'async',
+          widths: '600,900,1200,1600,2000,2400',
+          sizes: '100vw',
+          alt: section.settings.image_alt
+      }}
+    {%- endif -%}
+
+    <div class="vt-courage__over">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="vt-section-eyebrow">
+          <span class="vt-word" style="--i: 0;">{{ section.settings.eyebrow }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}
+        One span per word so they arrive one after another. Split on
+        spaces, not characters: per-letter reads as a gimmick at this
+        size, and it breaks selection and how a screen reader hands
+        the sentence over.
+      {%- endcomment -%}
+      <h2 class="vt-statement vt-statement--lg">
+        {%- for word in heading_words -%}
+          <span class="vt-word" style="--i: {{ forloop.index }};">{{ word }}</span>
+          {%- unless forloop.last %} {% endunless -%}
+        {%- endfor -%}
+      </h2>
+    </div>
+  </div>
+
+  <div class="vt-courage__litany">
+    <div class="vt-wrap vt-courage__grid">
+      {%- if lines.size > 0 -%}
+        <ul class="vt-litany">
+          {%- for line in lines -%}
+            {%- assign clean = line | strip_html | strip -%}
+            {%- if clean != blank -%}
+              <li>{{ clean }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.close_lead != blank or section.settings.close_turn != blank -%}
+        <p class="vt-courage__close">
+          {{- section.settings.close_lead }}
+          {%- if section.settings.close_turn != blank -%}
+            <span>{{ section.settings.close_turn }}</span>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  /* The reveal is tied to scroll position, not to a trigger line: --p
+     is how far the section has travelled into place, and the words
+     read out of it one after another.
+
+     The CSS default is --p: 1, so with JavaScript off, in the theme
+     editor, or for a reader who asked for reduced motion, the words
+     are simply there. This only ever winds --p down to 0 for a
+     section that genuinely starts below the fold — a section already
+     on screen keeps the visible resting state rather than waiting
+     for a scroll that may never come. */
+  (function () {
+    var section = document.getElementById({{ section_id | json }});
+    if (!section) return;
+
+    /* Always fully up in the theme editor: a section whose words only
+       exist part-way through a scroll is one a merchant will think is
+       broken. */
+    if (window.Shopify && window.Shopify.designMode) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var view = window.innerHeight || document.documentElement.clientHeight;
+    if (section.getBoundingClientRect().top < view * 0.9) return;
+
+    var progress = 0;
+    var queued = false;
+    section.style.setProperty('--p', '0');
+
+    function measure() {
+      queued = false;
+      var height = window.innerHeight || document.documentElement.clientHeight;
+      var top = section.getBoundingClientRect().top;
+
+      /* 0 while the section's top is still below 55% of the screen, 1
+         by the time it has climbed to 5%. The words begin only once
+         the section is properly on its way in, and have all landed as
+         it settles. */
+      var from = height * 0.55;
+      var to = height * 0.05;
+      var next = (from - top) / (from - to);
+      if (next < 0) next = 0;
+      if (next > 1) next = 1;
+
+      /* Only ever forwards. Letting it run backwards means the
+         sentence dismantles itself on the way back up the page, which
+         reads as a fault rather than an effect. */
+      if (next <= progress) return;
+      progress = next;
+      section.style.setProperty('--p', String(progress));
+    }
+
+    function onScroll() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(measure);
+    }
+
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Vates courage",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Courage" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Set over the photograph in near-black, one word at a time as the section scrolls in. Keep it short — this sits on the light part of the picture.",
+      "default": "Courage changes everything."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photograph",
+      "info": "Fills the whole section. Nothing is laid over it, so the upper-left of the photograph has to be light — that is where the near-black type sits. A dark or busy upper-left will make the words unreadable. Wants to be 2000px wide or more."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photograph alt text",
+      "default": "No.01 lying on an oak desk in window light, beside a pen and a closed notebook."
+    },
+    { "type": "header", "content": "The litany" },
+    {
+      "type": "textarea",
+      "id": "litany",
+      "label": "Lines",
+      "info": "One per line.",
+      "default": "Courage to fail.\nCourage to be misunderstood.\nCourage to be disliked.\nCourage to leave what is comfortable.\nCourage to act before you know how it ends."
+    },
+    {
+      "type": "text",
+      "id": "close_lead",
+      "label": "Closing line",
+      "default": "Everything is possible."
+    },
+    {
+      "type": "text",
+      "id": "close_turn",
+      "label": "Closing line, second half",
+      "info": "Set in grey under the line above.",
+      "default": "But possibility means nothing until you act."
+    }
+  ],
+  "presets": [{ "name": "Vates courage" }]
+}
+{% endschema %}
