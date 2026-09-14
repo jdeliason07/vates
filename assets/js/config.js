@@ -34,6 +34,12 @@ window.VATES = {
            platforms. Without the redirect the ads cannot be optimised.
          · Adjustable quantity — on. It replaces the stepper that used
            to sit next to the button. */
+    /* NOTE: this link's own amount lives in Stripe, not here, and it was
+       created when the price was $89. product.price below is now $49 to
+       match the Shopify store (vates.store), which is the canonical
+       storefront. Until the Payment Link is rebuilt in the Stripe
+       dashboard it will charge the old amount - so either rebuild it or
+       leave checkout pointing at Shopify. */
     paymentLink: "https://buy.stripe.com/test_aFafZh0529pS2Zg34b5Rm00"
   },
 
@@ -54,7 +60,7 @@ window.VATES = {
     id: "no-01",
     sku: "VATES-NO01",
     name: "No. 01",
-    price: 89,
+    price: 49,
     currency: "USD",
 
     /* The edition line under the price. Leave number unset and the page

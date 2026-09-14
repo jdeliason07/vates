@@ -11,7 +11,7 @@
   var PRODUCT = {
     id: "no-01",
     name: "No. 01",
-    price: 89,
+    price: 49,
     /* The drawer shows the bottle on its own — at 4.5rem a whole
        room is a smudge. */
     image: "assets/img/no-01-thumb.webp",
