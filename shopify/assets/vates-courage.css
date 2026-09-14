@@ -27,7 +27,7 @@
   --vt-opsz-text: 'opsz' 72;
 }
 
-/* ── The statement scale ──────────────────────────────────────
+/* ── The statement scale ─────────────────────────────────
    Three sizes and no fourth. The whole page is: a statement, small
    copy under it, an image. */
 .vt-statement {
@@ -51,7 +51,7 @@
   max-width: 34rem;
 }
 
-/* ── 1 · The belief hero ──────────────────────────────────────
+/* ── 1 · The belief hero ───────────────────────────────────
    The old hero put a product sentence under the headline with a word
    that flipped through eight synonyms. The belief has to land without
    a paragraph under it, so the headline grows and everything else
@@ -109,7 +109,7 @@
   color: var(--vt-smoke);
 }
 
-/* ── 2 · The tension ──────────────────────────────────────────
+/* ── 2 · The tension ──────────────────────────────────────
    The sparsest section on the page, and intentionally so: one column,
    a great deal of air, and the two operative nouns as the only words
    in white — so the eye assembles "possibility / courage" before it
@@ -131,7 +131,7 @@
 .vt-tension__turn { color: var(--vt-white); }
 .vt-tension__turn em { font-style: normal; color: var(--vt-white); }
 
-/* ── 3 · Courage ──────────────────────────────────────────────
+/* ── 3 · Courage ─────────────────────────────────────────
    The photograph carries the headline, the litany sits on black
    beneath it. One narrative beat, one section.
 
@@ -299,7 +299,7 @@
   padding-bottom: 3px;
 }
 
-/* ── 5 · The product ──────────────────────────────────────────
+/* ── 5 · The product ─────────────────────────────────────
    Restates the stylesheet's centred .vt-product, which was built for
    a single card on its own. The product now arrives after four
    sections of argument, so it reads left-aligned like the rest of the
@@ -368,7 +368,7 @@
   max-width: 26rem;
 }
 
-/* ── 6 · The facts ────────────────────────────────────────────
+/* ── 6 · The facts ───────────────────────────────────────
    The theme's existing spec grid, left as it is — a 1px hairline grid
    reads as a spec sheet rather than as three cards, which is exactly
    what this section should be. Only the alignment changes. */
@@ -376,7 +376,7 @@
 .vt-stats .vt-stat__num { font-variation-settings: var(--vt-opsz-display); }
 .vt-stats .vt-stat p { margin: 0; }
 
-/* ── 7 · Act ──────────────────────────────────────────────────
+/* ── 7 · Act ────────────────────────────────────────────
    The signup keeps its markup and its form; it stops being centred so
    the page ends in the same column it has used the whole way down. */
 .vt-signup { text-align: left; }
@@ -385,7 +385,7 @@
 .vt-signup__form { margin-inline: 0; }
 .vt-signup__note { margin-inline: 0; }
 
-/* ── Reduced motion ──────────────────────────────────────────── */
+/* ── Reduced motion ───────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .vt-courage__photo { --p: 1 !important; }
   .vt-word { opacity: 1; transform: none; }

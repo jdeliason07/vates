@@ -3,9 +3,18 @@
 Prepared changes for the **live Shopify store** `vates.store`, theme
 **"Vates — ritual full-bleed"** (role: `MAIN`).
 
-**Nothing here has been applied to the live theme.** These are the files
-to push once the preview is approved. Apply order and rollback are at the
-bottom.
+**Nothing here has been applied to the live theme.** The files are
+deployed to an unpublished staging theme; the live storefront is
+unchanged. What is left to do is in *Remaining* at the bottom.
+
+| Theme | ID | Role |
+|---|---|---|
+| `Vates — ritual full-bleed` | `159292948638` | **MAIN** — live, untouched |
+| `Vates — courage (staging)` | `159478055070` | unpublished — these files |
+| `Vates — pre-courage (rollback 2026-09-14)` | `159478022302` | unpublished — rollback copy |
+
+Every file below is byte-identical between this repo and the staging
+theme, verified by MD5 after upload.
 
 > Note: this repository is the separate static storefront on Vercel
 > (`loom-one-lime.vercel.app`). The Shopify theme has never been under
@@ -159,21 +168,39 @@ there is something behind it.
 
 ---
 
-## Applying this
+## Done
 
-1. **Duplicate the current `MAIN` theme first.** That is the rollback,
-   and it takes one click: Online Store → Themes → ⋯ → Duplicate. Name
-   it something like `Vates — pre-courage (rollback)`.
-2. Push these files into a **duplicate** of the live theme, not the live
-   one — Online Store → Themes → ⋯ → Edit code.
-3. Preview that theme. Check the hero at 360px and 1920px, the courage
-   photograph's type contrast, and that **Pre-order No.01 still adds to
-   cart and reaches checkout**.
-4. Update the manifesto page body from `content/manifesto.html`.
-5. Publish the theme.
-6. Then the decisions above: delete the draft $89 product, delete the
-   duplicate manifesto page, fix the menu, write the product
-   description.
+1. ✅ **Rollback copy taken** of the live theme before anything else:
+   `Vates — pre-courage (rollback 2026-09-14)`. Publishing that theme
+   reverts the storefront completely.
+2. ✅ **Files deployed** to `Vates — courage (staging)`, unpublished.
+   MD5-verified against this repo.
+
+## Remaining
+
+3. **Preview the staging theme** — Online Store → Themes → *Vates —
+   courage (staging)* → Preview. Worth checking specifically:
+   - the hero headline at 360px and at 1920px;
+   - the courage photograph's type contrast on a phone;
+   - that **Pre-order No.01 still adds to cart and reaches checkout**.
+4. **The manifesto page is not updated yet, on purpose.** Pages are
+   store-wide, not theme-scoped, so editing `the-manifesto-1` would go
+   live immediately against the *current* theme. Do it at the same time
+   as step 5, from `content/manifesto.html`.
+5. **Publish** the staging theme.
+6. Then the decisions in the audit above: delete the draft $89 product,
+   delete the duplicate manifesto page, fix the menu, write the live
+   product description.
+
+### Not carried over to the staging theme
+
+`sections/vates-ritual.liquid` is still present in the staging theme but
+no longer referenced by `templates/index.json`. Left in place rather than
+deleted, so nothing can break on publish; delete it afterwards if you
+want the theme tidy.
+
+`.vt-ritual` and `.vt-flip` in `vates-home.css` are likewise now unused.
+`vates-home.css` was not edited at all — that was the point.
 
 ### Re-measure if you move the courage photograph
 
