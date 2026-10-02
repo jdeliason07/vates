@@ -1,0 +1,308 @@
+{% liquid
+  assign featured_product = section.settings.product
+  assign featured_variant = featured_product.selected_or_first_available_variant
+%}
+
+<section
+  class="vates-editorial"
+  id="VatesEditorial-{{ section.id }}"
+  style="--vates-bg: {{ section.settings.background }}; --vates-text: {{ section.settings.text_color }}; --vates-muted: {{ section.settings.muted_color }}; --vates-accent: {{ section.settings.accent_color }}; --vates-product-bg: {{ section.settings.product_background }};"
+>
+  <div class="vates-editorial__grain" aria-hidden="true"></div>
+
+  <div class="vates-editorial__hero" data-vates-reveal>
+    <div class="vates-editorial__hero-copy">
+      <div>
+        <p class="vates-editorial__eyebrow vates-editorial__eyebrow--signal">{{ section.settings.hero_eyebrow | escape }}</p>
+        <h1>{{ section.settings.hero_title | escape | newline_to_br }}</h1>
+      </div>
+      <div class="vates-editorial__hero-bottom">
+        <div class="vates-editorial__body">{{ section.settings.hero_body }}</div>
+        <div class="vates-editorial__hero-cta">
+          <div class="vates-editorial__hero-cta-row">
+            <a class="vates-editorial__hero-cta-primary" href="{{ section.settings.hero_primary_link | default: '/products/no-01' }}">{{ section.settings.hero_primary_label | escape }}</a>
+            <a class="vates-editorial__text-link" href="{{ section.settings.hero_secondary_link | default: '/pages/the-manifesto-1' }}">{{ section.settings.hero_secondary_label | escape }} <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="vates-editorial__eyebrow">{{ section.settings.hero_microcopy | escape }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vates-editorial__hero-media">
+      <img
+        class="vates-editorial__hero-painting"
+        src="https://cdn.shopify.com/s/files/1/0790/2075/3054/files/last-of-england-web.jpg?v=1790876182"
+        width="1340"
+        height="1500"
+        alt="The Last of England (1855) by Ford Madox Brown — two emigrants braving the sea."
+        loading="eager"
+      >
+      <div class="vates-editorial__image-note">
+        <span>{{ section.settings.hero_image_note | escape }}</span>
+        <span>01 / 04</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vates-editorial__belief" id="VatesBelief-{{ section.id }}" data-vates-reveal>
+    <p class="vates-editorial__index">01 / {{ section.settings.belief_eyebrow | escape }}</p>
+    <div>
+      <h2>{{ section.settings.belief_title | escape | newline_to_br }}</h2>
+      <div class="vates-editorial__body">{{ section.settings.belief_body }}</div>
+    </div>
+  </div>
+
+  <div class="vates-editorial__product-intro" data-vates-reveal>
+    <p class="vates-editorial__eyebrow">{{ section.settings.product_intro_eyebrow | escape }}</p>
+    <h2>{{ section.settings.product_intro_title | escape | newline_to_br }}</h2>
+  </div>
+
+  <div class="vates-editorial__product" id="VatesProduct-{{ section.id }}" data-vates-reveal>
+    <div class="vates-editorial__product-art">
+      <a href="/products/no-01">
+        {% if section.settings.product_image != blank %}
+          {{ section.settings.product_image | image_url: width: 1122 | image_tag: widths: '400, 600, 800, 1000, 1122', sizes: '(min-width: 900px) 31vw, 72vw', loading: 'lazy', alt: section.settings.product_image.alt }}
+        {% elsif featured_product.featured_image != blank %}
+          {{ featured_product.featured_image | image_url: width: 1122 | image_tag: widths: '400, 600, 800, 1000, 1122', sizes: '(min-width: 900px) 31vw, 72vw', loading: 'lazy', alt: featured_product.featured_image.alt }}
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="vates-editorial__product-copy">
+      <div>
+        <h2>{{ section.settings.product_title | escape | newline_to_br }}</h2>
+        <div class="vates-editorial__body">{{ section.settings.product_body }}</div>
+      </div>
+
+      <div class="vates-editorial__product-row">
+        <div>
+          {% if featured_product != blank %}
+            <p class="vates-editorial__price">{{ featured_product.price | money_without_trailing_zeros }}</p>
+          {% endif %}
+        </div>
+
+        {% if featured_product != blank %}
+          {% form 'product', featured_product, class: 'vates-editorial__product-form' %}
+            <input type="hidden" name="id" value="{{ featured_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button class="vates-editorial__product-button" type="submit" {% unless featured_variant.available %}disabled{% endunless %}>
+              {% if featured_variant.available %}
+                {{ section.settings.product_action | escape }} <span aria-hidden="true">→</span>
+              {% else %}
+                {{ section.settings.sold_out_label | escape }}
+              {% endif %}
+            </button>
+          {% endform %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="vates-editorial__founder-note" data-vates-reveal>
+    <div class="vates-editorial__founder-photo">
+      {% if section.settings.founder_photo != blank %}
+        {{ section.settings.founder_photo | image_url: width: 800 | image_tag: widths: '400, 600, 800', sizes: '(min-width: 900px) 28vw, 70vw', loading: 'lazy', alt: section.settings.founder_names | default: section.settings.founder_eyebrow }}
+      {% else %}
+        <div class="vates-editorial__founder-placeholder" aria-hidden="true"></div>
+        <p class="vates-editorial__founder-caption">{{ section.settings.founder_names | escape }}</p>
+      {% endif %}
+    </div>
+    <div class="vates-editorial__founder-copy">
+      <p class="vates-editorial__eyebrow">{{ section.settings.founder_eyebrow | escape }}</p>
+      <p class="vates-editorial__founder-statement">{{ section.settings.founder_title | escape }}</p>
+      <div class="vates-editorial__body">{{ section.settings.founder_body }}</div>
+      <p class="vates-editorial__founder-signature">{{ section.settings.founder_signature | escape }}</p>
+    </div>
+  </div>
+
+  <div class="vates-editorial__footer-line">
+    <span>{{ section.settings.footer_left | escape }}</span>
+    <span>{{ section.settings.footer_right | escape }}</span>
+  </div>
+</section>
+
+{% stylesheet %}
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap');
+  .vates-editorial {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--vates-bg);
+    color: var(--vates-text);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .vates-editorial * { box-sizing: border-box; }
+  .vates-editorial__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    opacity: .08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+  }
+  .vates-editorial__hero { display: grid; grid-template-columns: 58% 42%; min-height: max(52rem, 94svh); border-bottom: 1px solid color-mix(in srgb, var(--vates-text) 14%, transparent); }
+  .vates-editorial__hero-copy { padding: clamp(3rem, 6vw, 6.5rem) clamp(2rem, 4vw, 4.5rem) clamp(3.5rem, 7vw, 7rem); display: flex; flex-direction: column; justify-content: space-between; }
+  .vates-editorial__hero h1 { margin: clamp(7rem, 17vh, 12rem) 0 3rem; max-width: none; white-space: nowrap; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(4rem, 7.5vw, 8.4rem); line-height: .79; letter-spacing: -.03em; text-transform: uppercase; }
+  .vates-editorial__eyebrow,
+  .vates-editorial__index,
+  .vates-editorial__image-note,
+  .vates-editorial__founder-caption,
+  .vates-editorial__footer-line {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: .72rem;
+    letter-spacing: .13em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  .vates-editorial__eyebrow--signal { display: flex; align-items: center; gap: .8rem; color: var(--vates-muted); }
+  .vates-editorial__eyebrow--signal::before { content: ''; width: .48rem; height: .48rem; background: var(--vates-accent); border-radius: 50%; }
+  .vates-editorial__body { max-width: 36rem; color: var(--vates-muted); font-family: Arial, Helvetica, sans-serif; font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.8; }
+  .vates-editorial__body > * { margin: 0; }
+  .vates-editorial__hero-bottom { display: flex; flex-direction: column; gap: 1.75rem; align-items: flex-start; }
+  .vates-editorial__text-link { justify-self: end; width: fit-content; border: 0; border-bottom: 1px solid currentColor; padding: 0 0 .5rem; color: inherit; background: transparent; font-family: 'Courier New', Courier, monospace; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+  .vates-editorial__hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .vates-editorial__hero-cta-row { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; justify-content: flex-start; }
+  .vates-editorial__hero-cta-primary { min-height: 3.4rem; border: 0; border-radius: 999px; padding: 0 2.2rem; display: inline-flex; align-items: center; background: var(--vates-accent); color: var(--vates-text); font-family: 'Courier New', Courier, monospace; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: filter .3s ease; }
+  .vates-editorial__hero-cta-primary:hover { filter: brightness(0.88); }
+  .vates-editorial__hero-media { position: relative; min-height: max(52rem, 94svh); overflow: hidden; border-left: 1px solid color-mix(in srgb, var(--vates-text) 14%, transparent); background: #161616; }
+  .vates-editorial__hero-painting { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 35%; filter: brightness(0.6) saturate(0.7) sepia(0.15) hue-rotate(-10deg); }
+  .vates-editorial__hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, #0B0B0C 0%, transparent 45%), linear-gradient(180deg, transparent 45%, rgba(0,0,0,.68)); }
+  .vates-editorial__image-note { position: absolute; z-index: 2; left: 1.6rem; right: 1.6rem; bottom: 1.4rem; display: flex; justify-content: space-between; gap: 1rem; }
+  .vates-editorial__belief { min-height: 92svh; display: grid; grid-template-columns: 24% 76%; gap: 4rem; padding: clamp(8rem, 16vw, 16rem) clamp(2rem, 5vw, 5.5rem); border-bottom: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); align-items: center; }
+  .vates-editorial__belief > div { max-width: 68rem; }
+  .vates-editorial__belief h2 { margin: 0 0 clamp(4rem, 8vw, 7rem); max-width: 11ch; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(4rem, 8vw, 8.5rem); line-height: .89; letter-spacing: -.025em; }
+  .vates-editorial__belief .vates-editorial__body { margin-left: auto; max-width: 31rem; }
+  .vates-editorial__founder-note { min-height: 82svh; padding: clamp(8rem, 14vw, 14rem) clamp(2rem, 5vw, 5.5rem); border-top: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); display: grid; grid-template-columns: 30% 1fr; gap: 6vw; align-items: center; }
+  .vates-editorial__founder-photo { display: flex; flex-direction: column; gap: 1.2rem; }
+  .vates-editorial__founder-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; filter: saturate(.85) contrast(1.04); border-radius: 10px; }
+  .vates-editorial__founder-placeholder { width: 100%; aspect-ratio: 4 / 5; border: 1px solid color-mix(in srgb, var(--vates-text) 18%, transparent); border-radius: 10px; }
+  .vates-editorial__founder-caption { color: var(--vates-muted); }
+  .vates-editorial__founder-copy { display: flex; flex-direction: column; }
+  .vates-editorial__founder-statement { margin: clamp(2.5rem, 6vw, 5rem) 0 0; max-width: 17ch; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(3rem, 5.5vw, 6rem); line-height: .98; letter-spacing: -.02em; }
+  .vates-editorial__founder-copy .vates-editorial__body { margin-top: clamp(1.5rem, 3vw, 2.5rem); max-width: 42rem; }
+  .vates-editorial__founder-signature { margin: 2rem 0 0; color: var(--vates-text); font-family: 'Courier New', Courier, monospace; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+  .vates-editorial__product-intro { min-height: 50svh; padding: clamp(8rem, 15vw, 15rem) clamp(2rem, 5vw, 5.5rem) clamp(3rem, 6vw, 5rem); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+  .vates-editorial__product-intro h2 { margin: clamp(2.5rem, 6vw, 5rem) 0 0; max-width: 13ch; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(4rem, 7.6vw, 7.8rem); line-height: .9; letter-spacing: -.02em; word-spacing: .1em; text-transform: uppercase; }
+  .vates-editorial__product { display: grid; grid-template-columns: 52% 48%; min-height: max(50rem, 94svh); border-bottom: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); border-top: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); }
+  .vates-editorial__product-art { position: relative; overflow: hidden; display: grid; place-items: center; background: var(--vates-product-bg); color: var(--vates-bg); }
+  .vates-editorial__product-art a { display: block; width: 100%; text-align: center; }
+  .vates-editorial__product-art a img { position: relative; z-index: 2; display: inline-block; width: min(60%, 36rem); height: auto; max-height: 54rem; object-fit: contain; filter: drop-shadow(0 2.4rem 2.8rem rgba(0,0,0,.28)); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+  .vates-editorial__product:hover .vates-editorial__product-art a img { transform: translateY(-.5rem) rotate(1deg); }
+  .vates-editorial__product-copy { padding: clamp(4rem, 8vw, 8rem) clamp(2rem, 5vw, 5.5rem); display: flex; flex-direction: column; justify-content: space-between; }
+  .vates-editorial__product-copy h2 { margin: 0 0 1.2rem; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(5rem, 9vw, 9rem); line-height: .9; letter-spacing: -.02em; text-transform: uppercase; }
+  .vates-editorial__product-row { padding-top: 1.7rem; border-top: 1px solid color-mix(in srgb, var(--vates-text) 18%, transparent); display: flex; justify-content: space-between; gap: 1.5rem; align-items: end; }
+  .vates-editorial__price { margin: 0; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: 3.2rem; line-height: 1; }
+  .vates-editorial__product-form { margin: 0; }
+  .vates-editorial__product-button { min-height: 3.4rem; border: 0; border-radius: 999px; padding: 0 2.2rem; background: var(--vates-accent); color: var(--vates-text); font-family: 'Courier New', Courier, monospace; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; transition: filter .3s ease, transform .3s ease; }
+  .vates-editorial__product-button:hover { filter: brightness(0.88); }
+  .vates-editorial__product-button:disabled { opacity: .5; }
+  .vates-editorial__footer-line { min-height: 5.25rem; padding: 0 3rem; border-top: 1px solid color-mix(in srgb, var(--vates-text) 18%, transparent); display: flex; align-items: center; justify-content: space-between; gap: 1.4rem; color: var(--vates-muted); }
+  .vates-editorial button { cursor: pointer; }
+  .vates-editorial [data-vates-reveal] { opacity: 0; transform: translateY(2.5rem); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1); }
+  .vates-editorial [data-vates-reveal].is-visible { opacity: 1; transform: none; }
+  .vates-editorial button:focus-visible,
+  .vates-editorial a:focus-visible,
+  .vates-editorial input:focus-visible { outline: 2px solid var(--vates-accent); outline-offset: 3px; }
+  @media (max-width: 899px) {
+    .vates-editorial__hero { grid-template-columns: 1fr; }
+    .vates-editorial__hero-copy { min-height: 72svh; padding: 3rem 1.5rem 3.5rem; }
+    .vates-editorial__hero h1 { margin-top: 8rem; }
+    .vates-editorial__hero-media { min-height: 68svh; border-left: 0; border-top: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent); }
+    .vates-editorial__belief { grid-template-columns: 1fr; min-height: 92svh; padding: 8rem 1.5rem; }
+    .vates-editorial__belief .vates-editorial__body { margin-left: 0; }
+    .vates-editorial__founder-note { min-height: 92svh; padding: 8rem 1.5rem; grid-template-columns: 1fr; gap: 5rem; }
+    .vates-editorial__product-intro { min-height: 40svh; padding: 6rem 1.5rem 2.5rem; }
+    .vates-editorial__product { grid-template-columns: 1fr; }
+    .vates-editorial__product-art { min-height: 82svh; }
+    .vates-editorial__product-art a img { width: min(78%, 32rem); }
+    .vates-editorial__product-copy { min-height: 72svh; padding: 5rem 1.5rem; }
+  }
+  @media (max-width: 579px) {
+    .vates-editorial__hero h1 { font-size: clamp(3rem, 14vw, 4.8rem); }
+    .vates-editorial__text-link { justify-self: start; }
+    .vates-editorial__product-row { flex-direction: column; align-items: stretch; }
+    .vates-editorial__product-button { width: 100%; }
+    .vates-editorial__footer-line { padding: 1.6rem 1.5rem; align-items: flex-start; flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vates-editorial * { scroll-behavior: auto !important; transition: none !important; }
+    .vates-editorial [data-vates-reveal] { opacity: 1; transform: none; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    document.querySelectorAll('.vates-editorial').forEach((root) => {
+      if (root.dataset.vatesReady === 'true') return;
+      root.dataset.vatesReady = 'true';
+
+      const revealItems = root.querySelectorAll('[data-vates-reveal]');
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          });
+        }, { rootMargin: '0px 0px -10% 0px', threshold: .08 });
+        revealItems.forEach((item) => revealObserver.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      }
+
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Vates editorial home",
+  "tag": "section",
+  "class": "section-vates-editorial",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Vates / Issue 001 / Courage" },
+    { "type": "textarea", "id": "hero_title", "label": "Title", "default": "Everything\nis possible." },
+    { "type": "richtext", "id": "hero_body", "label": "Body", "default": "<p>The world does not need more spectators. It needs people with the courage to act on what they see.</p>" },
+    { "type": "text", "id": "hero_primary_label", "label": "Primary button label", "default": "Pre-order No.01 — $49" },
+    { "type": "url", "id": "hero_primary_link", "label": "Primary button link" },
+    { "type": "text", "id": "hero_secondary_label", "label": "Secondary link label", "default": "Read the manifesto" },
+    { "type": "url", "id": "hero_secondary_link", "label": "Secondary link" },
+    { "type": "text", "id": "hero_microcopy", "label": "CTA microcopy", "default": "First batch of 500 · Ships November 7 · Free shipping" },
+    { "type": "text", "id": "hero_image_note", "label": "Image note", "default": "For the creators of the world" },
+    { "type": "header", "content": "Belief" },
+    { "type": "text", "id": "belief_eyebrow", "label": "Eyebrow", "default": "The belief" },
+    { "type": "textarea", "id": "belief_title", "label": "Title", "default": "Not motivation.\nEvidence." },
+    { "type": "richtext", "id": "belief_body", "label": "Body", "default": "<p>Vates documents the moment people stop waiting for permission and start creating. Honest stories about the fear, decisions, failures and work behind what eventually looks inevitable.</p>" },
+    { "type": "header", "content": "Product" },
+    { "type": "product", "id": "product", "label": "Product" },
+    { "type": "image_picker", "id": "product_image", "label": "Product image" },
+    { "type": "text", "id": "product_intro_eyebrow", "label": "Eyebrow", "default": "02 / The symbol" },
+    { "type": "textarea", "id": "product_intro_title", "label": "Section headline", "default": "A physical reminder\nto act on what you see." },
+    { "type": "text", "id": "product_title", "label": "Product name", "default": "No.01" },
+    { "type": "richtext", "id": "product_body", "label": "Description", "default": "<p>A daily reminder of the promise you made before the world tried to make you smaller. Smoke-finish borosilicate, 750ml.</p>" },
+    { "type": "text", "id": "product_action", "label": "Product action", "default": "Pre-order No.01" },
+    { "type": "text", "id": "sold_out_label", "label": "Sold out label", "default": "Sold out" },
+    { "type": "header", "content": "Founder note" },
+    { "type": "image_picker", "id": "founder_photo", "label": "Founder photo", "info": "Leave empty to show a placeholder frame with the names captioned beneath it." },
+    { "type": "text", "id": "founder_names", "label": "Founder names (caption)", "default": "Braden Crystal & Jack Eliason" },
+    { "type": "text", "id": "founder_eyebrow", "label": "Eyebrow", "default": "A note from the founders" },
+    { "type": "textarea", "id": "founder_title", "label": "Statement", "default": "We needed a daily reminder to stay true to our vision. So we built one." },
+    { "type": "richtext", "id": "founder_body", "label": "Body", "default": "<p>Vates began in the distance between the life we could imagine and the courage required to build it. We are documenting that distance honestly: the false starts, the doubt, the work, and the decision to continue.</p>" },
+    { "type": "text", "id": "founder_signature", "label": "Signature", "default": "The founders of Vates" },
+    { "type": "text", "id": "footer_left", "label": "Footer left", "default": "Vates® / Provo, Utah / 2026" },
+    { "type": "text", "id": "footer_right", "label": "Footer right", "default": "Courage → Action → Creation" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#090909" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#F0EEE8" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#AAA8A2" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#D22B32" },
+    { "type": "color", "id": "product_background", "label": "Product background", "default": "#DEDBD3" }
+  ],
+  "presets": [
+    { "name": "Vates editorial home" }
+  ]
+}
+{% endschema %}
