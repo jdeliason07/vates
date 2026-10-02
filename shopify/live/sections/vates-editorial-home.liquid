@@ -109,7 +109,7 @@
     <div class="vates-editorial__buybar" data-vates-buybar aria-hidden="true" inert>
       <p class="vates-editorial__buybar-price">{{ featured_product.price | money_without_trailing_zeros }}</p>
       <button class="vates-editorial__buybar-button" type="submit" form="{{ product_form_id }}">
-        {{ section.settings.sticky_action | escape }} <span aria-hidden="true">→</span>
+        {{ section.settings.sticky_action | default: 'Pre-order' | escape }} <span aria-hidden="true">→</span>
       </button>
     </div>
   {% endif %}
