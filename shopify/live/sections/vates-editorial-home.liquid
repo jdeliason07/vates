@@ -1,6 +1,7 @@
 {% liquid
   assign featured_product = section.settings.product
   assign featured_variant = featured_product.selected_or_first_available_variant
+  assign product_form_id = 'VatesProductForm-' | append: section.id
 %}
 
 <section
@@ -74,29 +75,44 @@
         <div class="vates-editorial__body">{{ section.settings.product_body }}</div>
       </div>
 
-      <div class="vates-editorial__product-row">
-        <div>
-          {% if featured_product != blank %}
-            <p class="vates-editorial__price">{{ featured_product.price | money_without_trailing_zeros }}</p>
-          {% endif %}
-        </div>
+      {% if featured_product != blank %}
+        <div class="vates-editorial__product-row">
+          <p class="vates-editorial__price">{{ featured_product.price | money_without_trailing_zeros }}</p>
 
-        {% if featured_product != blank %}
-          {% form 'product', featured_product, class: 'vates-editorial__product-form' %}
-            <input type="hidden" name="id" value="{{ featured_variant.id }}">
-            <input type="hidden" name="quantity" value="1">
-            <button class="vates-editorial__product-button" type="submit" {% unless featured_variant.available %}disabled{% endunless %}>
-              {% if featured_variant.available %}
-                {{ section.settings.product_action | escape }} <span aria-hidden="true">→</span>
-              {% else %}
-                {{ section.settings.sold_out_label | escape }}
-              {% endif %}
-            </button>
-          {% endform %}
-        {% endif %}
-      </div>
+          <div class="vates-editorial__product-cta">
+            {% form 'product', featured_product, id: product_form_id, class: 'vates-editorial__product-form' %}
+              <input type="hidden" name="id" value="{{ featured_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button class="vates-editorial__product-button" type="submit" data-vates-main-cta {% unless featured_variant.available %}disabled{% endunless %}>
+                {% if featured_variant.available %}
+                  {{ section.settings.product_action | escape }} <span aria-hidden="true">→</span>
+                {% else %}
+                  {{ section.settings.sold_out_label | escape }}
+                {% endif %}
+              </button>
+            {% endform %}
+            {% if section.settings.product_microcopy != blank %}
+              <p class="vates-editorial__ship-note">{{ section.settings.product_microcopy | escape }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
+
+  {% comment %}
+    Mobile buy bar. Submits the product form above through the form
+    attribute, so there is one form and one variant id. Hidden from the
+    accessibility tree and from tabbing until the script shows it.
+  {% endcomment %}
+  {% if featured_product != blank and featured_variant.available %}
+    <div class="vates-editorial__buybar" data-vates-buybar aria-hidden="true" inert>
+      <p class="vates-editorial__buybar-price">{{ featured_product.price | money_without_trailing_zeros }}</p>
+      <button class="vates-editorial__buybar-button" type="submit" form="{{ product_form_id }}">
+        {{ section.settings.sticky_action | escape }} <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  {% endif %}
 
   <div class="vates-editorial__founder-note" data-vates-reveal>
     <div class="vates-editorial__founder-photo">
@@ -190,11 +206,15 @@
   .vates-editorial__product-art a { display: block; width: 100%; text-align: center; }
   .vates-editorial__product-art a img { position: relative; z-index: 2; display: inline-block; width: min(60%, 36rem); height: auto; max-height: 54rem; object-fit: contain; filter: drop-shadow(0 2.4rem 2.8rem rgba(0,0,0,.28)); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
   .vates-editorial__product:hover .vates-editorial__product-art a img { transform: translateY(-.5rem) rotate(1deg); }
-  .vates-editorial__product-copy { padding: clamp(4rem, 8vw, 8rem) clamp(2rem, 5vw, 5.5rem); display: flex; flex-direction: column; justify-content: space-between; }
-  .vates-editorial__product-copy h2 { margin: 0 0 1.2rem; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(5rem, 9vw, 9rem); line-height: .9; letter-spacing: -.02em; text-transform: uppercase; }
-  .vates-editorial__product-row { padding-top: 1.7rem; border-top: 1px solid color-mix(in srgb, var(--vates-text) 18%, transparent); display: flex; justify-content: space-between; gap: 1.5rem; align-items: end; }
+  .vates-editorial__product-copy { padding: clamp(2.5rem, 4vw, 4rem) clamp(2rem, 5vw, 5.5rem); display: flex; flex-direction: column; justify-content: center; gap: clamp(2.25rem, 3.5vw, 3.25rem); }
+  .vates-editorial__product-copy h2 { margin: 0 0 1rem; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: clamp(5rem, 9vw, 9rem); line-height: .9; letter-spacing: -.02em; text-transform: uppercase; }
+  .vates-editorial__product-row { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
   .vates-editorial__price { margin: 0; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: 3.2rem; line-height: 1; }
+  .vates-editorial__product-cta { display: flex; flex-direction: column; gap: .85rem; }
+  .vates-editorial__product-cta .vates-editorial__product-button { width: 100%; }
   .vates-editorial__product-form { margin: 0; }
+  .vates-editorial__ship-note { margin: 0; color: #8A9096; font-family: 'Courier New', Courier, monospace; font-size: .66rem; letter-spacing: .1em; line-height: 1.4; text-align: center; text-transform: uppercase; }
+  .vates-editorial__buybar { display: none; }
   .vates-editorial__product-button { min-height: 3.4rem; border: 0; border-radius: 999px; padding: 0 2.2rem; background: var(--vates-accent); color: var(--vates-text); font-family: 'Courier New', Courier, monospace; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; transition: filter .3s ease, transform .3s ease; }
   .vates-editorial__product-button:hover { filter: brightness(0.88); }
   .vates-editorial__product-button:disabled { opacity: .5; }
@@ -217,12 +237,36 @@
     .vates-editorial__product { grid-template-columns: 1fr; }
     .vates-editorial__product-art { min-height: 82svh; }
     .vates-editorial__product-art a img { width: min(78%, 32rem); }
-    .vates-editorial__product-copy { min-height: 72svh; padding: 5rem 1.5rem; }
+    .vates-editorial__product-copy { justify-content: flex-start; gap: 2rem; padding: 2.75rem 1.5rem 3rem; }
+  }
+  @media (max-width: 768px) {
+    .vates-editorial__buybar {
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px)) 1.25rem;
+      background: #0A0A0B;
+      border-top: 1px solid color-mix(in srgb, var(--vates-text) 12%, transparent);
+      border-radius: 10px 10px 0 0;
+      transform: translateY(calc(100% + 1px));
+      visibility: hidden;
+      transition: transform .38s cubic-bezier(.2,.7,.2,1), visibility 0s linear .38s;
+    }
+    .vates-editorial__buybar.is-visible { transform: none; visibility: visible; transition: transform .38s cubic-bezier(.2,.7,.2,1), visibility 0s; }
+    .vates-editorial__buybar-price { margin: 0; font-family: 'Oswald', Arial, Helvetica, sans-serif; font-weight: 300; font-size: 1.75rem; line-height: 1; }
+    .vates-editorial__buybar-button { min-height: 2.75rem; border: 0; border-radius: 999px; padding: 0 1.4rem; background: var(--vates-accent); color: var(--vates-text); font-family: 'Courier New', Courier, monospace; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; transition: filter .3s ease; }
+    .vates-editorial__buybar-button:hover { filter: brightness(0.88); }
   }
   @media (max-width: 579px) {
     .vates-editorial__hero h1 { font-size: clamp(3rem, 14vw, 4.8rem); }
     .vates-editorial__text-link { justify-self: start; }
-    .vates-editorial__product-row { flex-direction: column; align-items: stretch; }
+    .vates-editorial__product-row { align-items: stretch; }
     .vates-editorial__product-button { width: 100%; }
     .vates-editorial__footer-line { padding: 1.6rem 1.5rem; align-items: flex-start; flex-direction: column; }
   }
@@ -252,6 +296,32 @@
         revealItems.forEach((item) => item.classList.add('is-visible'));
       }
 
+      // The buy bar shows once the main CTA has scrolled up out of view, and
+      // hides when the CTA is back on screen or the section's footer line
+      // arrives, so it never sits over the footer. CSS keeps it off desktop.
+      const buybar = root.querySelector('[data-vates-buybar]');
+      const mainCta = root.querySelector('[data-vates-main-cta]');
+      const footerLine = root.querySelector('.vates-editorial__footer-line');
+      if (buybar && mainCta && 'IntersectionObserver' in window) {
+        let ctaPassed = false;
+        let footerReached = false;
+        const update = () => {
+          const show = ctaPassed && !footerReached;
+          buybar.classList.toggle('is-visible', show);
+          buybar.toggleAttribute('inert', !show);
+          buybar.setAttribute('aria-hidden', show ? 'false' : 'true');
+        };
+        const barObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const above = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+            if (entry.target === mainCta) ctaPassed = above;
+            if (entry.target === footerLine) footerReached = entry.isIntersecting || above;
+          });
+          update();
+        });
+        barObserver.observe(mainCta);
+        if (footerLine) barObserver.observe(footerLine);
+      }
     });
   })();
 {% endjavascript %}
@@ -285,6 +355,8 @@
     { "type": "richtext", "id": "product_body", "label": "Description", "default": "<p>A daily reminder of the promise you made before the world tried to make you smaller. Smoke-finish borosilicate, 750ml.</p>" },
     { "type": "text", "id": "product_action", "label": "Product action", "default": "Pre-order No.01" },
     { "type": "text", "id": "sold_out_label", "label": "Sold out label", "default": "Sold out" },
+    { "type": "text", "id": "product_microcopy", "label": "Line under the button", "default": "Ships November 7 · First batch of 500." },
+    { "type": "text", "id": "sticky_action", "label": "Mobile buy bar label", "default": "Pre-order" },
     { "type": "header", "content": "Founder note" },
     { "type": "image_picker", "id": "founder_photo", "label": "Founder photo", "info": "Leave empty to show a placeholder frame with the names captioned beneath it." },
     { "type": "text", "id": "founder_names", "label": "Founder names (caption)", "default": "Braden Crystal & Jack Eliason" },
